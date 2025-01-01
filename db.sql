@@ -76,6 +76,7 @@ CREATE TABLE chat (
     FOREIGN KEY (joueur_id) REFERENCES joueur(joueur_id)
 )
 
+
 CREATE TABLE historique (
     historique_id INT PRIMARY KEY AUTO_INCREMENT,
     joueur_id INT NOT NULL,
