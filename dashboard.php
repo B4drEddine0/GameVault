@@ -1,7 +1,6 @@
 <?php
-require_once 'connextion.php';
-$database = new DbConnection();
-$pdo = $database->getConnection();
+session_start();
+require_once 'GameClass.php';
 ?>
 
 <!DOCTYPE html>
@@ -14,7 +13,6 @@ $pdo = $database->getConnection();
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-900 text-white">
-    <!-- Sidebar -->
     <div class="fixed inset-y-0 left-0 w-64 bg-gray-800">
         <div class="flex items-center justify-center h-20 bg-gray-700">
             <h1 class="text-2xl font-bold">GameVault Admin</h1>
@@ -49,7 +47,7 @@ $pdo = $database->getConnection();
         <div class="flex justify-between items-center mb-8">
             <h2 class="text-3xl font-bold">Tableau de bord</h2>
             <div class="flex items-center">
-                <span class="mr-4">Admin</span>
+                <span class="mr-4"><?php echo htmlspecialchars($_SESSION['username'])?></span>
                 <img src="https://via.placeholder.com/40" class="rounded-full">
             </div>
         </div>
@@ -63,8 +61,7 @@ $pdo = $database->getConnection();
                         <h3 class="text-gray-400">Total Jeux</h3>
                         <p class="text-2xl font-bold">
                             <?php 
-                            require_once 'GameClass.php';
-                            $game = new Game($pdo);
+                            $game = new Game();
                             $games = $game->getAllGames();
                             echo count($games);
                             ?>
@@ -101,7 +98,6 @@ $pdo = $database->getConnection();
             </div>
         </div>
 
-        <!-- Game Management Section -->
         <div class="bg-gray-800 rounded-lg p-6 mb-8">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-xl font-bold">Gestion des Jeux</h3>
@@ -137,7 +133,7 @@ $pdo = $database->getConnection();
                                 </td>
                                 <td class="p-4">
                                     <span class="px-2 py-1 rounded-full text-xs 
-                                        <?= $gameItem['status'] === 'Disponible' ? 'bg-green-500' : 'bg-red-500' ?>">
+                                        <?= $gameItem['status'] === 'En Cours' ? 'bg-yellow-500' : ($gameItem['status'] === 'Terminé' ? 'bg-green-500' : 'bg-red-500') ?>">
                                         <?= htmlspecialchars($gameItem['status']) ?>
                                     </span>
                                 </td>
@@ -146,6 +142,10 @@ $pdo = $database->getConnection();
                                 <td class="p-4">
                                     <button onclick="openEditGameModal(<?= $gameItem['jeu_id'] ?>)" 
                                             class="text-blue-500 hover:text-blue-400 mr-3">
+                                            <?php
+                                                $game->setJeu_id($gameItem['jeu_id']);
+                                                $games = $game->getSelectedGame();
+                                            ?>
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button onclick="deleteGame(<?= $gameItem['jeu_id'] ?>)" 
@@ -225,11 +225,11 @@ $pdo = $database->getConnection();
         </div>
     </div>
 
-    <!-- Add Game Modal -->
+
     <div id="addGameModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
         <div class="bg-gray-800 p-8 rounded-lg w-full max-w-md">
-            <h3 class="text-xl font-bold mb-4">Ajouter un Jeu</h3>
-            <form id="addGameForm" method="POST" class="space-y-4">
+            <h3 id="editTitle" class="text-xl font-bold mb-4">Ajouter un Jeu</h3>
+            <form id="addGameForm" action='add_game.php' method="POST" class="space-y-4">
                 <div>
                     <label class="block text-gray-300 mb-2">Titre</label>
                     <input type="text" name="title" required 
@@ -241,6 +241,11 @@ $pdo = $database->getConnection();
                               class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600"></textarea>
                 </div>
                 <div>
+                    <label class="block text-gray-300 mb-2">Image(url)</label>
+                    <input type="text" name="image" required 
+                           class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600">
+                </div>
+                <div>
                     <label class="block text-gray-300 mb-2">Type</label>
                     <input type="text" name="type" required 
                            class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600">
@@ -249,8 +254,9 @@ $pdo = $database->getConnection();
                     <label class="block text-gray-300 mb-2">Status</label>
                     <select name="status" required 
                             class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600">
-                        <option value="Disponible">Disponible</option>
-                        <option value="Non disponible">Non disponible</option>
+                        <option value="En Cours">En Cours</option>
+                        <option value="Terminé">Terminé</option>
+                        <option value="Abandonné">Abandonné</option>
                     </select>
                 </div>
                 <div>
@@ -268,7 +274,7 @@ $pdo = $database->getConnection();
                             class="px-4 py-2 border border-gray-600 rounded-lg hover:bg-gray-700">
                         Annuler
                     </button>
-                    <button type="submit" 
+                    <button type="submit"  id="addBtn"
                             class="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg">
                         Ajouter
                     </button>
@@ -280,6 +286,8 @@ $pdo = $database->getConnection();
     <script>
     function openAddGameModal() {
         document.getElementById('addGameModal').classList.remove('hidden');
+        document.getElementById('editTitle').textContent = 'Ajouter un Jeu';
+        document.getElementById('addBtn').textContent = 'Ajouter';
     }
 
     function closeAddGameModal() {
@@ -287,44 +295,17 @@ $pdo = $database->getConnection();
     }
 
     function openEditGameModal(gameId) {
-        // Implement edit modal logic
-        console.log('Edit game:', gameId);
+        document.getElementById('addGameModal').classList.remove('hidden');
+        document.getElementById('editTitle').textContent = 'Edit un Jeu';
+        document.getElementById('addBtn').textContent = 'Modifier';
     }
 
     function deleteGame(gameId) {
         if(confirm('Êtes-vous sûr de vouloir supprimer ce jeu ?')) {
-            fetch(`delete_game.php?id=${gameId}`, {
-                method: 'DELETE'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if(data.success) {
-                    location.reload();
-                } else {
-                    alert('Erreur lors de la suppression');
-                }
-            });
+           
         }
     }
 
-    document.getElementById('addGameForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const formData = new FormData(this);
-        
-        fetch('add_game.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.success) {
-                closeAddGameModal();
-                location.reload();
-            } else {
-                alert('Erreur lors de l\'ajout du jeu');
-            }
-        });
-    });
     </script>
 </body>
 </html>

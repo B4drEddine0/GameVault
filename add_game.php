@@ -1,27 +1,24 @@
 <?php
-require_once 'GameVault/GameClass.php';
+session_start();
+require_once 'GameClass.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        $game = new Game($pdo);
+        $game = new Game();
         
-        $game->setAdminId($_SESSION['admin_id']); // Assurez-vous d'avoir l'ID admin en session
+        $game->getAdmId();
+        $game->setAdminId($_SESSION['admin_id']);
         $game->setTitle($_POST['title']);
+        $game->setImage($_POST['image']);
         $game->setDescription($_POST['description']);
         $game->setType($_POST['type']);
         $game->setStatus($_POST['status']);
         $game->setDateSortie($_POST['date_sortie']);
-        $game->setRating(0); // Valeur par défaut
-        $game->setNbUsers(0); // Valeur par défaut
-        $game->setTempsJeu(0); // Valeur par défaut
+        $game->setRating(0);
+        $game->setNbUsers(0);
+        $game->setTempsJeu($_POST['temps_jeu']);
 
         if($game->add()) {
-            echo json_encode(['success' => true]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Erreur lors de l\'ajout']);
+            header('location: dashboard.php');
         }
-    } catch(Exception $e) {
-        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-    }
 }
 ?> 
