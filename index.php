@@ -1,9 +1,5 @@
 <?php
-<<<<<<< HEAD
-session_start();
-=======
 require_once 'GameClass.php';
->>>>>>> d48eb0e2d1f4714d446d403bdee6ef7ae8da1599
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -13,55 +9,6 @@ require_once 'GameClass.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GameVault</title>
     <script src="https://cdn.tailwindcss.com"></script>
-<<<<<<< HEAD
-</head>
-
-<body class="bg-gray-900 text-white">
-    <nav class="bg-gray-800 fixed w-full z-10">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center">
-                    <h1 class="text-2xl font-bold">GameVault</h1>
-                    <div class="ml-10 flex items-center space-x-4">
-                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Accueil</a>
-                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Jeux</a>
-                        <div class="flex space-x-4">
-                            <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Chat</a>
-                            <?php if (isset($_SESSION['username'])): ?>
-                                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Ma Collection</a>
-                                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Mon Historique</a>
-                                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Mes Favoris</a>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center">
-                    <?php if (isset($_SESSION['username'])): ?>
-                        <div class="flex items-center space-x-4">
-                            <img src="<?php echo $_SESSION['profile_picture'] ?? 'images/profil.webp'; ?>"
-                                alt=""
-                                class="w-10 h-10 rounded-full cursor-pointer"
-                                onclick="window.location.href='profil.php';">
-                            <span class="text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                            <button
-                                class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
-                                onclick="window.location.href='logout.php';">
-                                Déconnexion
-                            </button>
-                        </div>
-                    <?php else: ?>
-                        <button
-                            class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg mr-4"
-                            onclick="window.location.href='signin.php';">
-                            Connexion
-                        </button>
-                        <button
-                            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
-                            onclick="window.location.href='signup.php';">
-                            Inscription
-                        </button>
-                    <?php endif; ?>
-=======
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .game-card {
@@ -122,39 +69,10 @@ require_once 'GameClass.php';
                     <a href="signup.php" class="px-4 py-2 rounded-full bg-gradient-to-r from-[#FF6B6B] to-[#4ECDC4] hover:opacity-90 transition-opacity">
                         Inscription
                     </a>
->>>>>>> d48eb0e2d1f4714d446d403bdee6ef7ae8da1599
                 </div>
             </div>
         </div>
     </nav>
-<<<<<<< HEAD
-    <div class="pt-16">
-        <div class="relative bg-gray-800 h-[500px]">
-            <div class="absolute inset-0 bg-gradient-to-r from-purple-900 to-transparent"></div>
-            <div class="relative max-w-7xl mx-auto py-24 px-4">
-                <h2 class="text-4xl font-bold mb-4">Gérez votre collection de jeux</h2>
-                <p class="text-xl text-gray-300 mb-8">Rejoignez notre communauté de gamers et partagez votre passion</p>
-                <button class="bg-purple-600 hover:bg-purple-700 px-6 py-3 rounded-lg text-lg">
-                    Commencer maintenant
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="max-w-7xl mx-auto px-4 py-12">
-        <h2 class="text-3xl font-bold mb-8">Jeux populaires</h2>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div class="bg-gray-800 rounded-lg overflow-hidden">
-                <img src="https://via.placeholder.com/300x200" alt="Game" class="w-full">
-                <div class="p-4">
-                    <h3 class="font-bold mb-2">Elden Ring</h3>
-                    <div class="flex items-center text-yellow-500 mb-2">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <span class="ml-2 text-white">5.0</span>
-=======
 
     <!-- Hero Section -->
     <div class="pt-20 min-h-screen flex items-center relative overflow-hidden">
@@ -176,7 +94,6 @@ require_once 'GameClass.php';
                         <a href="#games" class="px-8 py-3 rounded-full border border-gray-700 hover:border-[#4ECDC4] transition-colors">
                             Explorer
                         </a>
->>>>>>> d48eb0e2d1f4714d446d403bdee6ef7ae8da1599
                     </div>
                 </div>
                 <div class="hidden md:block relative">
