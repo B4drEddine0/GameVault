@@ -242,7 +242,7 @@ require_once 'GameClass.php';
                 </div>
                 <div>
                     <label class="block text-gray-300 mb-2">Image(url)</label>
-                    <input type="text" name="image" required 
+                    <input type="text" name="image"  
                            class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600">
                 </div>
                 <div>
