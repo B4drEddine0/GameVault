@@ -4,7 +4,7 @@ class DbConnection{
     private $host = "localhost";
     private $db_name = "GameVault";
     private $username = "root";
-    private $password = "12345 chadli";
+    private $password = "12345chadli";
     public $conn;
 
     public function getConnection(){
