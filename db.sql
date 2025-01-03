@@ -84,3 +84,16 @@ CREATE TABLE historique (
     FOREIGN KEY (jeu_id) REFERENCES jeu(jeu_id)
 )
 
+alter table jeu add COLUMN image VARCHAR(250);
+alter table users add COLUMN image VARCHAR(250); 
+
+
+ALTER TABLE users
+MODIFY COLUMN image VARCHAR(255) DEFAULT 'images/profil.webp';
+
+ALTER TABLE users
+MODIFY COLUMN image VARCHAR(255) DEFAULT 'images/profil.webp';
+
+
+INSERT INTO users (username, email, user_password, role_user, image) 
+VALUES ('utilisateur', 'nouvel_utilisateur@example.com', 'motdepasse', 'joueur', 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?rs=1&pid=ImgDetMain');

@@ -1,36 +1,65 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GameVault - Accueil</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-gray-900 text-white">
     <nav class="bg-gray-800 fixed w-full z-10">
         <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between h-16">
+            <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center">
                     <h1 class="text-2xl font-bold">GameVault</h1>
                     <div class="ml-10 flex items-center space-x-4">
                         <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Accueil</a>
                         <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Jeux</a>
-                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Chat</a>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Chat</a>
+                            <?php if (isset($_SESSION['username'])): ?>
+                                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Ma Collection</a>
+                                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Mon Historique</a>
+                                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Mes Favoris</a>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
                 <div class="flex items-center">
-                    <button class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg mr-4">
-                        Connexion
-                    </button>
-                    <button class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg">
-                        Inscription
-                    </button>
+                    <?php if (isset($_SESSION['username'])): ?>
+                        <div class="flex items-center space-x-4">
+                            <img src="<?php echo $_SESSION['profile_picture'] ?? 'images/profil.webp'; ?>"
+                                alt=""
+                                class="w-10 h-10 rounded-full cursor-pointer"
+                                onclick="window.location.href='profil.php';">
+                            <span class="text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                            <button
+                                class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
+                                onclick="window.location.href='logout.php';">
+                                Déconnexion
+                            </button>
+                        </div>
+                    <?php else: ?>
+                        <button
+                            class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg mr-4"
+                            onclick="window.location.href='signin.php';">
+                            Connexion
+                        </button>
+                        <button
+                            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
+                            onclick="window.location.href='signup.php';">
+                            Inscription
+                        </button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </nav>
-
     <div class="pt-16">
         <div class="relative bg-gray-800 h-[500px]">
             <div class="absolute inset-0 bg-gradient-to-r from-purple-900 to-transparent"></div>
@@ -43,7 +72,6 @@
             </div>
         </div>
     </div>
-
     <div class="max-w-7xl mx-auto px-4 py-12">
         <h2 class="text-3xl font-bold mb-8">Jeux populaires</h2>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -89,4 +117,5 @@
         </div>
     </div>
 </body>
-</html> 
+
+</html>
