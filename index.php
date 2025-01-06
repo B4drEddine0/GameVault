@@ -1,8 +1,32 @@
 <?php
+session_start();
+include('connexion.php');
 require_once 'GameClass.php';
+
+
+$dbConnection = new DbConnection();
+$conn = $dbConnection->getConnection();
+if (!isset($_SESSION['username'])) {
+    header('Location: signin.php');
+    exit;
+}
+
+$username = $_SESSION['username'];
+
+
+$userId = $_SESSION['user_id'];
+$query = "SELECT image FROM users WHERE username = ?";
+$stmt = $conn->prepare($query);
+$stmt->execute([$username]);
+$user = $stmt->fetch();
+
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,23 +41,34 @@ require_once 'GameClass.php';
         .game-card {
             transition: transform 0.3s ease;
         }
+
         .game-card:hover {
             transform: translateY(-10px);
         }
+
         .gradient-text {
             background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
+
         .game-card img {
             backface-visibility: hidden;
         }
 
         @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(2deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(2deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
         }
 
         .float-animation {
@@ -41,9 +76,17 @@ require_once 'GameClass.php';
         }
 
         @keyframes glow {
-            0% { filter: drop-shadow(0 0 2px rgba(99, 102, 241, 0.2)); }
-            50% { filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.4)); }
-            100% { filter: drop-shadow(0 0 2px rgba(99, 102, 241, 0.2)); }
+            0% {
+                filter: drop-shadow(0 0 2px rgba(99, 102, 241, 0.2));
+            }
+
+            50% {
+                filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.4));
+            }
+
+            100% {
+                filter: drop-shadow(0 0 2px rgba(99, 102, 241, 0.2));
+            }
         }
 
         svg.float-animation {
@@ -52,6 +95,7 @@ require_once 'GameClass.php';
         }
     </style>
 </head>
+
 <body class="bg-[#0F172A] text-gray-100">
     <!-- Header -->
     <nav class="fixed w-full z-10 bg-zinc-900/30 backdrop-blur-sm border-b border-zinc-700/30">
@@ -59,18 +103,45 @@ require_once 'GameClass.php';
             <div class="flex justify-between h-16">
                 <div class="flex items-center space-x-8">
                     <h1 class="text-2xl font-bold">Game<span class="gradient-text">Vault</span></h1>
-                    <div class="hidden md:flex items-center space-x-4">
-                        <a href="#" class="text-zinc-400 hover:text-white transition-colors">Découvrir</a>
-                        <a href="#" class="text-zinc-400 hover:text-white transition-colors">Bibliothèque</a>
-                        <a href="#" class="text-zinc-400 hover:text-white transition-colors">Chat</a>
+                    <div class="ml-10 flex items-center space-x-4">
+                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Accueil</a>
+                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Jeux</a>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Chat</a>
+                            <?php if (isset($_SESSION['username'])): ?>
+                                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Ma Collection</a>
+                                <a href="historique.php" class="text-gray-300 hover:text-white px-3 py-2">Mon Historique</a>
+                                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Mes Favoris</a>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <a href="signin.php" class="text-zinc-400 hover:text-white transition-colors">Connexion</a>
-                    <a href="signup.php" 
-                       class="bg-indigo-600/90 hover:bg-indigo-500 px-4 py-2 rounded-lg transition-colors glow-effect">
-                        S'inscrire
-                    </a>
+                <div class="flex items-center">
+                    <?php if (isset($_SESSION['username'])): ?>
+                        <div class="flex items-center space-x-4">
+                            <img src="<?php echo htmlspecialchars($user['image'] ?? 'images/profil.webp'); ?>"
+                                alt=""
+                                class="w-10 h-10 rounded-full cursor-pointer"
+                                onclick="window.location.href='profil.php';">
+                            <span class="text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                            <button
+                                class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
+                                onclick="window.location.href='logout.php';">
+                                Déconnexion
+                            </button>
+                        </div>
+                    <?php else: ?>
+                        <button
+                            class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg mr-4"
+                            onclick="window.location.href='signin.php';">
+                            Connexion
+                        </button>
+                        <button
+                            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
+                            onclick="window.location.href='signup.php';">
+                            Inscription
+                        </button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -90,9 +161,9 @@ require_once 'GameClass.php';
             <!-- Search Bar -->
             <div class="max-w-2xl">
                 <div class="relative">
-                    <input type="text" 
-                           placeholder="Rechercher un jeu..." 
-                           class="w-full px-6 py-4 bg-zinc-800/50 border border-zinc-700/30 rounded-lg text-white backdrop-blur-sm focus:outline-none focus:border-indigo-500 transition-colors">
+                    <input type="text"
+                        placeholder="Rechercher un jeu..."
+                        class="w-full px-6 py-4 bg-zinc-800/50 border border-zinc-700/30 rounded-lg text-white backdrop-blur-sm focus:outline-none focus:border-indigo-500 transition-colors">
                     <button class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-indigo-600/90 hover:bg-indigo-500 p-2 rounded-lg transition-colors glow-effect">
                         <i class="fas fa-search"></i>
                     </button>
@@ -110,41 +181,41 @@ require_once 'GameClass.php';
                 $game = new Game();
                 $games = $game->getAllGames();
 
-                foreach($games as $gameItem): 
-                        $imageUrl = !empty($gameItem['image']) ? $gameItem['image'] : 'images/default-game.jpg';
-                        ?>
-                        <div class="game-card bg-zinc-800 rounded-lg overflow-hidden">
-                            <div class="relative group">
-                                <img src="<?= htmlspecialchars($imageUrl) ?>" 
-                                     alt="<?= htmlspecialchars($gameItem['title']) ?>" 
-                                     class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-120"
-                                     onerror="this.src='assets/images/default-game.jpg'">
-                                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <a href="game_details.php?id=<?= $gameItem['jeu_id'] ?>" 
-                                       class="px-4 py-2 bg-indigo-600 rounded-md text-white transform -translate-y-2 group-hover:translate-y-0 transition-all">
-                                        Voir détails
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="font-bold text-lg mb-2"><?= htmlspecialchars($gameItem['title']) ?></h3>
-                                <div class="flex items-center mb-3">
-                                    <div class="flex items-center text-[#FFD700]">
-                                        <?php for($i = 0; $i < 5; $i++): ?>
-                                            <i class="fas fa-star <?= $i < $gameItem['rating'] ? 'text-[#FFD700]' : 'text-gray-600' ?> text-sm"></i>
-                                        <?php endfor; ?>
-                                    </div>
-                                    <span class="ml-2 text-sm text-gray-400"><?= number_format($gameItem['rating'], 1) ?></span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm text-gray-400"><?= htmlspecialchars($gameItem['type']) ?></span>
-                                    <button class="text-[#4ECDC4] hover:text-white transition-colors">
-                                        <i class="fas fa-bookmark"></i>
-                                    </button>
-                                </div>
+                foreach ($games as $gameItem):
+                    $imageUrl = !empty($gameItem['image']) ? $gameItem['image'] : 'images/default-game.jpg';
+                ?>
+                    <div class="game-card bg-zinc-800 rounded-lg overflow-hidden">
+                        <div class="relative group">
+                            <img src="<?= htmlspecialchars($imageUrl) ?>"
+                                alt="<?= htmlspecialchars($gameItem['title']) ?>"
+                                class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-120"
+                                onerror="this.src='assets/images/default-game.jpg'">
+                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <a href="game_details.php?id=<?= $gameItem['jeu_id'] ?>"
+                                    class="px-4 py-2 bg-indigo-600 rounded-md text-white transform -translate-y-2 group-hover:translate-y-0 transition-all">
+                                    Voir détails
+                                </a>
                             </div>
                         </div>
-                <?php 
+                        <div class="p-6">
+                            <h3 class="font-bold text-lg mb-2"><?= htmlspecialchars($gameItem['title']) ?></h3>
+                            <div class="flex items-center mb-3">
+                                <div class="flex items-center text-[#FFD700]">
+                                    <?php for ($i = 0; $i < 5; $i++): ?>
+                                        <i class="fas fa-star <?= $i < $gameItem['rating'] ? 'text-[#FFD700]' : 'text-gray-600' ?> text-sm"></i>
+                                    <?php endfor; ?>
+                                </div>
+                                <span class="ml-2 text-sm text-gray-400"><?= number_format($gameItem['rating'], 1) ?></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-400"><?= htmlspecialchars($gameItem['type']) ?></span>
+                                <button class="text-[#4ECDC4] hover:text-white transition-colors">
+                                    <i class="fas fa-bookmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                <?php
                 endforeach; ?>
             </div>
         </div>
@@ -239,4 +310,5 @@ require_once 'GameClass.php';
         </div>
     </footer>
 </body>
-</html> 
+
+</html>
