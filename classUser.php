@@ -6,6 +6,7 @@ class User {
     private $email;
     private $password;
     private $role;
+    private $db;
 
     // Constructeur pour initialiser les propriétés de l'utilisateur
     public function __construct($id = null, $username = null, $email = null, $password = null, $role = 'joueur') {
@@ -14,6 +15,10 @@ class User {
         $this->email = $email;
         $this->password = $password;
         $this->role = $role;
+
+
+        $database = new DbConnection;
+        $this->db = $database->getConnection();
     }
 
     // Getters et Setters
@@ -66,4 +71,12 @@ class User {
     public function verifyPassword($inputPassword) {
         return password_verify($inputPassword, $this->password);
     }
+
+
+    public function getAllUsers() {
+        $query = "SELECT * FROM users ORDER BY username DESC";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 }

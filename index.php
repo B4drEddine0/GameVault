@@ -10,6 +10,10 @@ require_once 'GameClass.php';
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        body {
+            background: linear-gradient(to bottom, #1e1b4b, #111827);
+            min-height: 100vh;
+        }
         .game-card {
             transition: transform 0.3s ease;
         }
@@ -49,24 +53,23 @@ require_once 'GameClass.php';
     </style>
 </head>
 <body class="bg-[#0F172A] text-gray-100">
-    <!-- Navigation -->
-    <nav class="fixed w-full z-10 backdrop-blur-md bg-[#0F172A]/80 border-b border-gray-800">
+    <!-- Header -->
+    <nav class="fixed w-full z-10 bg-zinc-900/30 backdrop-blur-sm border-b border-zinc-700/30">
         <div class="max-w-7xl mx-auto px-6">
-            <div class="flex justify-between h-20">
+            <div class="flex justify-between h-16">
                 <div class="flex items-center space-x-8">
-                    <h1 class="text-2xl font-bold gradient-text">GameVault</h1>
-                    <div class="hidden md:flex space-x-6">
-                        <a href="#" class="text-gray-300 hover:text-[#4ECDC4] transition-colors">Accueil</a>
-                        <a href="#" class="text-gray-300 hover:text-[#4ECDC4] transition-colors">Découvrir</a>
-                        <a href="#" class="text-gray-300 hover:text-[#4ECDC4] transition-colors">Communauté</a>
+                    <h1 class="text-2xl font-bold">Game<span class="gradient-text">Vault</span></h1>
+                    <div class="hidden md:flex items-center space-x-4">
+                        <a href="#" class="text-zinc-400 hover:text-white transition-colors">Découvrir</a>
+                        <a href="#" class="text-zinc-400 hover:text-white transition-colors">Bibliothèque</a>
+                        <a href="#" class="text-zinc-400 hover:text-white transition-colors">Chat</a>
                     </div>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="signin.php" class="px-4 py-2 rounded-full border border-[#4ECDC4] text-[#4ECDC4] hover:bg-[#4ECDC4] hover:text-white transition-colors">
-                        Connexion
-                    </a>
-                    <a href="signup.php" class="px-4 py-2 rounded-full bg-gradient-to-r from-[#FF6B6B] to-[#4ECDC4] hover:opacity-90 transition-opacity">
-                        Inscription
+                    <a href="signin.php" class="text-zinc-400 hover:text-white transition-colors">Connexion</a>
+                    <a href="signup.php" 
+                       class="bg-indigo-600/90 hover:bg-indigo-500 px-4 py-2 rounded-lg transition-colors glow-effect">
+                        S'inscrire
                     </a>
                 </div>
             </div>
@@ -74,86 +77,34 @@ require_once 'GameClass.php';
     </nav>
 
     <!-- Hero Section -->
-    <div class="pt-20 min-h-screen flex items-center relative overflow-hidden">
-        <div class="absolute inset-0 bg-[url('path/to/gaming-pattern.png')] opacity-5"></div>
-        <div class="max-w-7xl mx-auto px-6 py-20 relative z-10">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                    <h2 class="text-5xl font-bold mb-6 leading-tight">
-                        Votre <span class="gradient-text">Collection</span><br>
-                        Votre <span class="gradient-text">Univers</span>
-                    </h2>
-                    <p class="text-gray-400 text-lg mb-8">
-                        Explorez, gérez et partagez votre passion pour les jeux vidéo dans un espace unique et personnalisé.
-                    </p>
-                    <div class="flex space-x-4">
-                        <a href="signup.php" class="px-8 py-3 rounded-full bg-gradient-to-r from-[#FF6B6B] to-[#4ECDC4] hover:opacity-90 transition-opacity inline-flex items-center">
-                            Commencer <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                        <a href="#games" class="px-8 py-3 rounded-full border border-gray-700 hover:border-[#4ECDC4] transition-colors">
-                            Explorer
-                        </a>
-                    </div>
-                </div>
-                <div class="hidden md:block relative">
-                    <div class="absolute inset-0 bg-indigo-500/10 blur-3xl rounded-full"></div>
-                    <svg class="w-full h-auto float-animation" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <filter id="glow">
-                                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-                                <feMerge>
-                                    <feMergeNode in="coloredBlur"/>
-                                    <feMergeNode in="SourceGraphic"/>
-                                </feMerge>
-                            </filter>
-                        </defs>
-                        
-                        <g fill="none" stroke="currentColor" stroke-width="2" class="text-indigo-400" filter="url(#glow)">
-                            <!-- Corps principal -->
-                            <path d="M50,70 
-                                     C50,70 60,60 100,60
-                                     C140,60 150,70 150,70
-                                     L160,100
-                                     C160,130 130,140 100,140
-                                     C70,140 40,130 40,100
-                                     L50,70"
-                                  class="text-indigo-400">
-                                <animate attributeName="stroke-dasharray" 
-                                         values="1,400;400,1;1,400" 
-                                         dur="3s" 
-                                         repeatCount="indefinite"/>
-                            </path>
-
-                            <!-- Touchpad -->
-                            <rect x="75" y="70" width="50" height="25" rx="5"/>
-
-                            <!-- Joysticks (maintenant alignés) -->
-                            <circle cx="75" cy="115" r="8"/>
-                            <circle cx="125" cy="115" r="8"/>
-
-                            <!-- Boutons -->
-                            <circle cx="140" cy="100" r="4"/>
-                            <circle cx="147" cy="93" r="4"/>
-                            <circle cx="147" cy="107" r="4"/>
-                            <circle cx="154" cy="100" r="4"/>
-
-                            <!-- D-pad -->
-                            <path d="M53,100 L67,100 M60,93 L60,107"/>
-                        </g>
-                    </svg>
+    <div class="relative min-h-screen flex items-center">
+        <div class="absolute inset-0 bg-[#1e1b4b]/50"></div>
+        <div class="relative max-w-7xl mx-auto px-6 py-32">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4">
+                Bienvenue sur <span class="gradient-text">GameVault</span>
+            </h1>
+            <p class="text-xl text-zinc-300 mb-8">
+                Votre <span class="gradient-text">Collection</span><br>
+                Votre <span class="gradient-text">Univers</span>
+            </p>
+            <!-- Search Bar -->
+            <div class="max-w-2xl">
+                <div class="relative">
+                    <input type="text" 
+                           placeholder="Rechercher un jeu..." 
+                           class="w-full px-6 py-4 bg-zinc-800/50 border border-zinc-700/30 rounded-lg text-white backdrop-blur-sm focus:outline-none focus:border-indigo-500 transition-colors">
+                    <button class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-indigo-600/90 hover:bg-indigo-500 p-2 rounded-lg transition-colors glow-effect">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Games Section -->
-    <div id="games" class="py-20 relative">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex justify-between items-center mb-12">
-                <h2 class="text-3xl font-bold">Jeux Populaires</h2>
-                <a href="#" class="text-[#4ECDC4] hover:underline">Voir tout</a>
-            </div>
-            
+    <!-- Games Grid -->
+    <div class="bg-[#1e1b4b]/10 backdrop-blur-sm border-t border-b border-zinc-700/30">
+        <div class="max-w-7xl mx-auto px-6 py-16">
+            <h2 class="text-3xl font-bold mb-8">Jeux <span class="gradient-text">Populaires</span></h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <?php
                 $game = new Game();
@@ -169,9 +120,10 @@ require_once 'GameClass.php';
                                      class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-120"
                                      onerror="this.src='assets/images/default-game.jpg'">
                                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                    <button class="px-4 py-2 bg-indigo-600 rounded-md text-white transform -translate-y-2 group-hover:translate-y-0 transition-all">
+                                    <a href="game_details.php?id=<?= $gameItem['jeu_id'] ?>" 
+                                       class="px-4 py-2 bg-indigo-600 rounded-md text-white transform -translate-y-2 group-hover:translate-y-0 transition-all">
                                         Voir détails
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                             <div class="p-6">
@@ -198,37 +150,93 @@ require_once 'GameClass.php';
         </div>
     </div>
 
-    <!-- Features Section -->
-    <div class="py-20 bg-[#1E293B]">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-3xl font-bold text-center mb-16">Fonctionnalités</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div class="group">
-                    <div class="bg-[#0F172A] p-8 rounded-xl relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-r from-[#FF6B6B]/10 to-[#4ECDC4]/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <i class="fas fa-gamepad text-3xl text-[#FF6B6B] mb-6"></i>
-                        <h3 class="text-xl font-bold mb-4">Collection Intelligente</h3>
-                        <p class="text-gray-400">Organisez votre bibliothèque de jeux avec des outils avancés et intuitifs.</p>
+    <!-- Functionality Section -->
+    <div class="bg-[#1e1b4b]/30 backdrop-blur-sm border-t border-b border-zinc-700/30">
+        <div class="max-w-7xl mx-auto px-6 py-20">
+            <h2 class="text-3xl font-bold text-center mb-12">Nos <span class="gradient-text">Fonctionnalités</span></h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Collection Card -->
+                <div class="bg-[#1e1b4b]/40 p-6 rounded-lg backdrop-blur-sm border border-zinc-700/30 hover:border-indigo-500/50 transition-colors group">
+                    <div class="bg-indigo-600/20 p-3 rounded-lg w-12 h-12 flex items-center justify-center mb-4 group-hover:bg-indigo-600/30 transition-colors">
+                        <i class="fas fa-folder text-indigo-400"></i>
                     </div>
+                    <h3 class="text-xl font-bold mb-2">Gérez votre collection</h3>
+                    <p class="text-zinc-400">Organisez et suivez votre bibliothèque de jeux en un seul endroit.</p>
                 </div>
-                <div class="group">
-                    <div class="bg-[#0F172A] p-8 rounded-xl relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-r from-[#FF6B6B]/10 to-[#4ECDC4]/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <i class="fas fa-users text-3xl text-[#4ECDC4] mb-6"></i>
-                        <h3 class="text-xl font-bold mb-4">Communauté Active</h3>
-                        <p class="text-gray-400">Échangez avec des passionnés et partagez vos expériences de jeu.</p>
+
+                <!-- Community Card -->
+                <div class="bg-[#1e1b4b]/40 p-6 rounded-lg backdrop-blur-sm border border-zinc-700/30 hover:border-indigo-500/50 transition-colors group">
+                    <div class="bg-indigo-600/20 p-3 rounded-lg w-12 h-12 flex items-center justify-center mb-4 group-hover:bg-indigo-600/30 transition-colors">
+                        <i class="fas fa-users text-indigo-400"></i>
                     </div>
+                    <h3 class="text-xl font-bold mb-2">Rejoignez la communauté</h3>
+                    <p class="text-zinc-400">Partagez vos expériences et découvrez celles des autres joueurs.</p>
                 </div>
-                <div class="group">
-                    <div class="bg-[#0F172A] p-8 rounded-xl relative overflow-hidden">
-                        <div class="absolute inset-0 bg-gradient-to-r from-[#FF6B6B]/10 to-[#4ECDC4]/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <i class="fas fa-chart-line text-3xl text-[#FFD700] mb-6"></i>
-                        <h3 class="text-xl font-bold mb-4">Suivi Personnalisé</h3>
-                        <p class="text-gray-400">Suivez vos statistiques et votre progression en temps réel.</p>
+
+                <!-- Stats Card -->
+                <div class="bg-[#1e1b4b]/40 p-6 rounded-lg backdrop-blur-sm border border-zinc-700/30 hover:border-indigo-500/50 transition-colors group">
+                    <div class="bg-indigo-600/20 p-3 rounded-lg w-12 h-12 flex items-center justify-center mb-4 group-hover:bg-indigo-600/30 transition-colors">
+                        <i class="fas fa-chart-bar text-indigo-400"></i>
                     </div>
+                    <h3 class="text-xl font-bold mb-2">Suivez vos statistiques</h3>
+                    <p class="text-zinc-400">Visualisez votre temps de jeu et vos accomplissements.</p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Gaming Footer -->
+    <footer class="bg-[#1e1b4b]/40 backdrop-blur-sm border-t border-zinc-700/30">
+        <div class="max-w-7xl mx-auto px-6 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Logo Section -->
+                <div class="col-span-1">
+                    <h2 class="text-2xl font-bold mb-4">Game<span class="gradient-text">Vault</span></h2>
+                    <p class="text-zinc-400">Votre univers gaming, simplifié.</p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-span-1">
+                    <h3 class="text-lg font-semibold mb-4">Navigation</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Découvrir</a></li>
+                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Bibliothèque</a></li>
+                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Communauté</a></li>
+                    </ul>
+                </div>
+
+                <!-- Community -->
+                <div class="col-span-1">
+                    <h3 class="text-lg font-semibold mb-4">Communauté</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Discord</a></li>
+                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Forum</a></li>
+                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Blog</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social Links -->
+                <div class="col-span-1">
+                    <h3 class="text-lg font-semibold mb-4">Suivez-nous</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="bg-indigo-600/20 p-2 rounded-lg hover:bg-indigo-600/30 transition-colors">
+                            <i class="fab fa-discord text-zinc-400 hover:text-white"></i>
+                        </a>
+                        <a href="#" class="bg-indigo-600/20 p-2 rounded-lg hover:bg-indigo-600/30 transition-colors">
+                            <i class="fab fa-twitter text-zinc-400 hover:text-white"></i>
+                        </a>
+                        <a href="#" class="bg-indigo-600/20 p-2 rounded-lg hover:bg-indigo-600/30 transition-colors">
+                            <i class="fab fa-twitch text-zinc-400 hover:text-white"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-zinc-700/30 mt-8 pt-8 text-center text-zinc-400">
+                <p>&copy; 2024 GameVault. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html> 
