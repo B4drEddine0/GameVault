@@ -38,7 +38,6 @@ $user = $stmt->fetch();
             background: linear-gradient(to bottom, #1e1b4b, #111827);
             min-height: 100vh;
         }
-
         .game-card {
             transition: transform 0.3s ease;
         }

@@ -90,11 +90,42 @@ Class Game{
     }
 
     public function getSelectedGame() {
-        $query = "SELECT * FROM jeu WHERE jeu_id = :jeu_id ORDER BY create_at DESC ";
+        $query = "SELECT jeu_id, title, description, image, type, rating, date_sortie, nb_users, temps_jeu, status 
+                  FROM jeu 
+                  WHERE jeu_id = :jeu_id";
+                  
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':jeu_id', $this->jeu_id);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function modifyGame() {
+        $query = "UPDATE jeu SET title= :title,description= :description,
+        type= :type,date_sortie= :date_sortie,image= :image WHERE jeu_id= :jeu_id";
+        
+        $stmt = $this->db->prepare($query);
+        
+        $stmt->bindParam(':title', $this->title);
+        $stmt->bindParam(':description', $this->description);
+        $stmt->bindParam(':type', $this->type);
+        $stmt->bindParam(':date_sortie', $this->date_sortie);
+        $stmt->bindParam(':image', $this->image);
+        $stmt->bindParam(':jeu_id', $this->jeu_id);
+
+        if($stmt->execute()) {
+            header('location: dashboard.php');
+        }
+        return false;
 }
+
+    public function deleteGame($jeu_id) {
+        $query = "DELETE FROM jeu WHERE jeu_id = :jeu_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':jeu_id', $jeu_id);
+        $stmt->execute();
+        header('location: dashboard.php');
+    }
 }
 ?>
