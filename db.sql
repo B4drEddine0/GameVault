@@ -97,3 +97,6 @@ MODIFY COLUMN image VARCHAR(255) DEFAULT 'images/profil.webp';
 
 INSERT INTO users (username, email, user_password, role_user, image) 
 VALUES ('utilisateur', 'nouvel_utilisateur@example.com', 'motdepasse', 'joueur', 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?rs=1&pid=ImgDetMain');
+
+ALTER TABLE users
+Add COLUMN statut VARCHAR(50) DEFAULT 'Active';

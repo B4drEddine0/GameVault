@@ -20,11 +20,6 @@ $stmt = $conn->prepare($query);
 $stmt->execute([$username]);
 $user = $stmt->fetch();
 
-
-
-
-
-
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -60,42 +55,7 @@ $user = $stmt->fetch();
             backface-visibility: hidden;
         }
 
-        @keyframes float {
-            0% {
-                transform: translateY(0px) rotate(0deg);
-            }
-
-            50% {
-                transform: translateY(-10px) rotate(2deg);
-            }
-
-            100% {
-                transform: translateY(0px) rotate(0deg);
-            }
-        }
-
-        .float-animation {
-            animation: float 4s ease-in-out infinite;
-        }
-
-        @keyframes glow {
-            0% {
-                filter: drop-shadow(0 0 2px rgba(99, 102, 241, 0.2));
-            }
-
-            50% {
-                filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.4));
-            }
-
-            100% {
-                filter: drop-shadow(0 0 2px rgba(99, 102, 241, 0.2));
-            }
-        }
-
-        svg.float-animation {
-            filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.3));
-            animation: float 4s ease-in-out infinite, glow 2s ease-in-out infinite;
-        }
+    
     </style>
 </head>
 

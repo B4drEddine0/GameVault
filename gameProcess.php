@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once 'GameClass.php';
+require_once 'classUser.php';
 
 if (isset($_POST['ajoute'])) {
         $game = new Game();
@@ -9,6 +10,9 @@ if (isset($_POST['ajoute'])) {
         $game->setAdminId($_SESSION['admin_id']);
         $game->setTitle($_POST['title']);
         $game->setImage($_POST['image']);
+        $game->setImage2($_POST['image2']);
+        $game->setImage3($_POST['image3']);
+        $game->setImage4($_POST['image4']);
         $game->setDescription($_POST['description']);
         $game->setType($_POST['type']);
         $game->setStatus('En Cours');
@@ -41,5 +45,27 @@ if(isset($_POST['update'])){
         $game->setDateSortie($_POST['date_sortie']);
         $game->modifyGame();
 
+}
+
+if(isset($_POST['updateUser'])){
+    $user = new User();
+    $user->setId($_POST['users_id']);
+    $user->setUsername($_POST['username']);
+    $user->setImage($_POST['image']);
+    $user->setPassword($_POST['user_password']);
+    $user->setRole($_POST['role_user']);
+    $user->setEmail($_POST['email']);
+    $user->modifyUser();
+
+}
+
+if(isset($_GET['banne'])){
+    $id = $_GET['banne'];
+    $user = new User();
+    if($user->checkBann($id)){
+        $user->UnBannUser($id);
+    }else{
+        $user->BannUser($id);
+    }
 }
 ?> 

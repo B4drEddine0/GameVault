@@ -2,6 +2,9 @@
 session_start();
 require_once 'GameClass.php';
 require_once 'classUser.php';
+
+$user = new User();
+$banned = $user->getBannedUsers();
 ?>
 
 <!DOCTYPE html>
@@ -15,7 +18,7 @@ require_once 'classUser.php';
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         .gradient-text {
-            background: linear-gradient(to right, #818cf8, #6366f1);
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -36,41 +39,42 @@ require_once 'classUser.php';
             <h1 class="text-2xl font-bold">Game<span class="gradient-text">Vault</span> Admin</h1>
         </div>
         <nav class="mt-5">
-            <a href="#" class="flex items-center px-6 py-3 text-zinc-300 hover:bg-indigo-600/20">
+            <a class="dashBtn flex items-center px-6 py-3 text-zinc-300 hover:bg-indigo-600/20 cursor-pointer">
                 <i class="fas fa-home mr-3"></i>
                 Dashboard
             </a>
-            <a href="#" class="flex items-center px-6 py-3 text-zinc-300 hover:bg-indigo-600/20">
+            <a class="jeuBtn flex items-center px-6 py-3 text-zinc-300 hover:bg-indigo-600/20 cursor-pointer">
                 <i class="fas fa-gamepad mr-3"></i>
                 Gestion des Jeux
             </a>
-            <a href="#" class="flex items-center px-6 py-3 text-zinc-300 hover:bg-indigo-600/20">
+            <a class="userBtn flex items-center px-6 py-3 text-zinc-300 hover:bg-indigo-600/20 cursor-pointer">
                 <i class="fas fa-users mr-3"></i>
                 Utilisateurs
             </a>
-            <a href="#" class="flex items-center px-6 py-3 text-zinc-300 hover:bg-indigo-600/20">
-                <i class="fas fa-comments mr-3"></i>
-                Chat
-            </a>
-            <a href="#" class="flex items-center px-6 py-3 text-zinc-300 hover:bg-indigo-600/20">
+            <a class="banBtn flex items-center px-6 py-3 text-zinc-300 hover:bg-indigo-600/20 cursor-pointer">
                 <i class="fas fa-ban mr-3"></i>
                 Bannissements
+            </a>
+            <a href='index.php' class="flex items-center px-6 mt-96 text-zinc-300 hover:text-green-500 cursor-pointer">
+            <i class="fas fa-tachometer-alt mr-3"></i>
+                 Interface
+            </a>
+            <a onclick="window.location.href='logout.php';" class="flex items-center px-6 py-3 text-zinc-300 hover:text-red-500 cursor-pointer">
+                <i class="fas fa-sign-out-alt mr-3"></i>
+                 LogOut
             </a>
         </nav>
     </div>
 
-    <!-- Main Content -->
     <div class="ml-64 p-8">
-        <!-- Header -->
         <div class="flex justify-between items-center mb-8">
             <h2 class="text-3xl font-bold">Tableau de bord</h2>
             <div class="flex items-center">
                 <span class="mr-4"><?php echo htmlspecialchars($_SESSION['username'])?></span>
-                <img src="https://via.placeholder.com/40" class="rounded-full">
+                <img src="<?php $user = new User(); $profile = $user->getProfile($_SESSION['user_id']); echo $profile['image'];?>" class="rounded-full w-10 h-10">
             </div>
         </div>
 
-        <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div class="bg-[#1e1b4b]/30 p-6 rounded-lg backdrop-blur-sm border border-indigo-500/10">
                 <div class="flex items-center">
@@ -94,9 +98,9 @@ require_once 'classUser.php';
                         <h3 class="text-gray-400">Utilisateurs</h3>
                         <p class="text-2xl font-bold">
                             <?php 
-                                $user = new User();
-                                $users = $user->getAllUsers();
-                                echo count($users);
+                                $users = $user->getActiveUsers();
+                                $userscount = $user->getAllUsers();
+                                echo count($userscount);
                             ?>
                         </p>
                     </div>
@@ -116,13 +120,13 @@ require_once 'classUser.php';
                     <i class="fas fa-ban text-red-500 text-3xl mr-4"></i>
                     <div>
                         <h3 class="text-gray-400">Bannissements</h3>
-                        <p class="text-2xl font-bold">123</p>
+                        <p class="text-2xl font-bold"><?php echo count($banned);?> </p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-[#1e1b4b]/30 rounded-lg p-6 mb-8 border border-indigo-500/10">
+        <div class="bg-[#1e1b4b]/30 rounded-lg p-6 mb-8 border border-indigo-500/10 hidden" id='jeuSection'>
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-xl font-bold">Gestion des Jeux</h3>
                 <button onclick="openAddGameModal()" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg flex items-center">
@@ -130,7 +134,6 @@ require_once 'classUser.php';
                 </button>
             </div>
 
-            <!-- Games Table -->
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
                     <thead class="bg-[#1e1b4b]/50">
@@ -138,8 +141,6 @@ require_once 'classUser.php';
                             <th class="p-4">Titre</th>
                             <th class="p-4">Type</th>
                             <th class="p-4">Note</th>
-                            <!-- <th class="p-4">Status</th>
-                            <th class="p-4">Temps de jeu</th> -->
                             <th class="p-4">Date de sortie</th>
                             <th class="p-4">Actions</th>
                         </tr>
@@ -155,13 +156,6 @@ require_once 'classUser.php';
                                         <?= number_format($gameItem['rating'], 1) ?>
                                     </div>
                                 </td>
-                                <!-- <td class="p-4">
-                                    <span class="px-2 py-1 rounded-full text-xs 
-                                        <?= $gameItem['status'] === 'En Cours' ? 'text-yellow-500 font-semibold font-poppins' : ($gameItem['status'] === 'Terminé' ? 'text-green-500 font-semibold font-poppins' : 'text-red-500 font-semibold font-poppins') ?>">
-                                        <?= htmlspecialchars($gameItem['status']) ?>
-                                    </span>
-                                </td>
-                                <td class="p-4"><?= $gameItem['temps_jeu'] ?> heures</td> -->
                                 <td class="p-4"><?= $gameItem['date_sortie'] ?></td>
                                 <td class="p-4">
                                         <button onclick="window.location.href='modify_game.php?id=<?=$gameItem['jeu_id']?>'" 
@@ -184,8 +178,8 @@ require_once 'classUser.php';
             </div>
         </div>
 
-        <!-- User Management Section -->
-        <div class="bg-[#1e1b4b]/30 rounded-lg p-6 mb-8 border border-indigo-500/10">
+
+        <div class="bg-[#1e1b4b]/30 rounded-lg p-6 mb-8 border border-indigo-500/10 hidden" id='userSection'>
             <h3 class="text-xl font-bold mb-6">Gestion des Utilisateurs</h3>
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
@@ -193,7 +187,7 @@ require_once 'classUser.php';
                         <tr>
                             <th class="p-4">Utilisateur</th>
                             <th class="p-4">Rôle</th>
-                            <th class="p-4">Status</th>
+                            <th class="p-4">Statut</th>
                             <th class="p-4">Actions</th>
                         </tr>
                     </thead>
@@ -201,51 +195,62 @@ require_once 'classUser.php';
                         
                         <tr class="border-b border-gray-700">
                             <td class="p-4 flex items-center">
-                                <img src="https://via.placeholder.com/32" class="rounded-full mr-3">
-                                John Doe
+                                <img src="<?php echo htmlspecialchars($userItem['image'])?>" class="rounded-full mr-3 w-10 h-10">
+                                <?php echo htmlspecialchars($userItem['username'])?>
                             </td>
-                            <td class="p-4">Utilisateur</td>
+                            <td class="p-4"><?php echo htmlspecialchars($userItem['role_user'])?></td>
+                            <td class="p-4"><?php echo htmlspecialchars($userItem['statut'])?></td>
                             <td class="p-4">
-                                <span class="px-2 py-1 rounded-full text-xs bg-green-500">Actif</span>
-                            </td>
-                            <td class="p-4">
-                                <button class="text-blue-500 hover:text-blue-400 mr-3">
+                                <button onclick="window.location.href='modify_user.php?id=<?=$userItem['users_id']?>'"  
+                                  class="text-blue-500 hover:text-blue-400 mr-3">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="text-red-500 hover:text-red-400">
-                                    <i class="fas fa-ban"></i>
-                                </button>
+                                <form action="gameProcess.php" method='GET' class='inline'>
+                                    <button class="text-red-500 hover:text-red-400"  name='banne' value='<?=$userItem['users_id']?>'> 
+                                        <i class="fas fa-ban"></i>
+                                    </button>
+                                </form>
+                                
                             </td>
+                            <?php endforeach;?>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Chat Moderation Section -->
-        <div class="bg-[#1e1b4b]/30 rounded-lg p-6 border border-indigo-500/10">
-            <h3 class="text-xl font-bold mb-6">Modération du Chat</h3>
+
+        <div class="bg-[#1e1b4b]/30 rounded-lg p-6 border border-indigo-500/10 hidden" id='banSection'>
+            <h3 class="text-xl font-bold mb-6">Gestion des Bannissements</h3>
             <div class="space-y-4">
-                <!-- Exemple de message -->
-                <div class="flex items-start space-x-4">
-                    <img src="https://via.placeholder.com/40" class="rounded-full">
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between">
-                            <h4 class="font-bold">John Doe</h4>
-                            <span class="text-sm text-gray-400">Il y a 5 minutes</span>
-                        </div>
-                        <p class="text-gray-300">Message exemple du chat...</p>
-                        <div class="mt-2">
-                            <button class="text-red-500 hover:text-red-400 mr-3">
-                                <i class="fas fa-trash"></i> Supprimer
-                            </button>
-                            <button class="text-yellow-500 hover:text-yellow-400">
-                                <i class="fas fa-flag"></i> Signaler
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <table class="w-full text-left">
+                    <thead class="bg-[#1e1b4b]/50">
+                        <tr>
+                            <th class="p-4">Utilisateur</th>
+                            <th class="p-4">Statut</th>
+                            <th class="p-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($banned as $bannedItem): ?>
+                        <tr class="border-b border-gray-700">
+                            <td class="p-4 flex items-center">
+                                <img src="<?php echo htmlspecialchars($bannedItem['image'])?>" class="rounded-full mr-3 w-10 h-10">
+                                <?php echo htmlspecialchars($bannedItem['username'])?>
+                            </td>
+                            <td class="p-4"><?php echo htmlspecialchars($bannedItem['statut'])?></td>
+                            <td class="p-4">
+                                <form action="gameProcess.php" method='GET' class='inline'>
+                                    <button class="text-red-500 hover:text-red-400"  name='banne' value='<?=$bannedItem['users_id']?>'> 
+                                        <i class="fas fa-undo ml-4"></i>
+                                    </button>
+                                </form>
+                                
+                            </td>
+                            <?php endforeach;?>
+                        </tr>
+                    </tbody>
+                </table>
         </div>
     </div>
 
@@ -264,30 +269,42 @@ require_once 'classUser.php';
                     <textarea name="description" required 
                               class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600"></textarea>
                 </div>
-                <div>
-                    <label class="block text-gray-300 mb-2">Image(url)</label>
-                    <input type="text" name="image"  
-                           class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600">
+                <div class="flex flex-wrap">
+                    <div class="w-1/2 px-2 mb-4">
+                        <label class="block text-gray-300 mb-2">ImagePrincipal(url)</label>
+                        <input type="text" name="image" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600" required>
+                    </div>
+                    <div class="w-1/2 px-2 mb-4">
+                        <label class="block text-gray-300 mb-2">Image2(url)</label>
+                        <input type="text" name="image2" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600">
+                    </div>
+                    <div class="w-1/2 px-2 mb-4">
+                        <label class="block text-gray-300 mb-2">Image3(url)</label>
+                        <input type="text" name="image3" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600">
+                    </div>
+                    <div class="w-1/2 px-2 mb-4">
+                        <label class="block text-gray-300 mb-2">Image4(url)</label>
+                        <input type="text" name="image4" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600">
+                    </div>
                 </div>
+
                 <div>
                     <label class="block text-gray-300 mb-2">Type</label>
-                    <input type="text" name="type" required 
-                           class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600">
+                           <select name="type" value="Select-Type" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600">
+                            <option value="Action">Action</option>
+                            <option value="Aventure">Aventure</option>
+                            <option value="Football">Football</option>
+                            <option value="Battlefield">Battlefield</option>
+                            <option value="Racing">Racing</option>
+                            <option value="RPG">RPG</option>
+                            <option value="Strategy">Strategy</option>
+                            <option value="Puzzle">Puzzle</option>
+                            <option value="Simulation">Simulation</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Fighting">Fighting</option>
+                           </select>
                 </div>
-                <!-- <div>
-                    <label class="block text-gray-300 mb-2">Status</label>
-                    <select name="status" required 
-                            class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600">
-                        <option value="En Cours">En Cours</option>
-                        <option value="Terminé">Terminé</option>
-                        <option value="Abandonné">Abandonné</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-gray-300 mb-2">Temps de jeu (heures)</label>
-                    <input type="number" name="temps_jeu" required 
-                           class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600">
-                </div> -->
                 <div>
                     <label class="block text-gray-300 mb-2">Date de sortie</label>
                     <input type="date" name="date_sortie" required 
@@ -315,6 +332,30 @@ require_once 'classUser.php';
 
     function closeAddGameModal() {
         document.getElementById('addGameModal').classList.add('hidden');
+    }
+
+    document.querySelector('.dashBtn').onclick = function() {
+        document.getElementById('userSection').classList.add('hidden');
+        document.getElementById('jeuSection').classList.add('hidden');
+        document.getElementById('banSection').classList.add('hidden');
+    }
+
+    document.querySelector('.userBtn').onclick = function() {
+        document.getElementById('userSection').classList.remove('hidden');
+        document.getElementById('jeuSection').classList.add('hidden');
+        document.getElementById('banSection').classList.add('hidden');
+    }
+    
+    document.querySelector('.jeuBtn').onclick = function() {
+        document.getElementById('userSection').classList.add('hidden');
+        document.getElementById('jeuSection').classList.remove('hidden');
+        document.getElementById('banSection').classList.add('hidden');
+    }
+
+    document.querySelector('.banBtn').onclick = function() {
+        document.getElementById('userSection').classList.add('hidden');
+        document.getElementById('jeuSection').classList.add('hidden');
+        document.getElementById('banSection').classList.remove('hidden');
     }
 
 

@@ -101,10 +101,31 @@ if(isset($_POST['addToCollection'])){
                 <!-- Image Section -->
                 <div class="relative group">
                     <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden bg-zinc-800/30 backdrop-blur-sm border border-zinc-700/30">
-                        <img src="<?= !empty($gameDetails['image']) ? htmlspecialchars($gameDetails['image']) : 'images/default-game.jpg' ?>"
-                            alt="<?= htmlspecialchars($gameDetails['title']) ?>"
-                            class="w-full h-full object-cover"
-                            onerror="this.src='images/default-game.jpg'">
+                        <img src="<?= !empty($gameDetails['image']) ? htmlspecialchars($gameDetails['image']) : 'images/default-game.jpg' ?>" 
+                             alt="<?= htmlspecialchars($gameDetails['title']) ?>"
+                             class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex mt-4 space-x-2">
+                        <!-- Image 1 -->
+                        <div class="w-1/3 rounded-lg overflow-hidden">
+                            <img src="<?= !empty($gameDetails['image2']) ? htmlspecialchars($gameDetails['image2']) : 'images/default-game.jpg' ?>" 
+                                alt="Image 2" 
+                                class="w-full h-32 object-cover">
+                        </div>
+
+                        <!-- Image 2 -->
+                        <div class="w-1/3 rounded-lg overflow-hidden">
+                            <img src="<?= !empty($gameDetails['image3']) ? htmlspecialchars($gameDetails['image3']) : 'images/default-game.jpg' ?>" 
+                                alt="Image 3" 
+                                class="w-full h-32 object-cover">
+                        </div>
+
+                        <!-- Image 3 -->
+                        <div class="w-1/3 rounded-lg overflow-hidden">
+                            <img src="<?= !empty($gameDetails['image4']) ? htmlspecialchars($gameDetails['image4']) : 'images/default-game.jpg' ?>" 
+                                alt="Image 4" 
+                                class="w-full h-32 object-cover">
+                        </div>
                     </div>
                 </div>
 
