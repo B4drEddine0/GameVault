@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 if ($user && password_verify($password, $user['user_password'])) {
                     session_start();
-                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['user_id'] = $user['users_id'];
                     $_SESSION['username'] = $user['username'];
                     $_SESSION['role'] = $user['role_user'];
                     header("Location: " . ($_SESSION['role'] === 'admin' ? 'dashboard.php' : 'index.php'));

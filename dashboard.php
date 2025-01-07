@@ -198,7 +198,7 @@ require_once 'classUser.php';
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($users as $userItem): ?>
+                        
                         <tr class="border-b border-gray-700">
                             <td class="p-4 flex items-center">
                                 <img src="https://via.placeholder.com/32" class="rounded-full mr-3">

@@ -1,23 +1,62 @@
 <?php
+session_start();
+include('connexion.php');
 require_once 'GameClass.php';
+require_once 'bibliotheClass.php';
+
+
+$dbConnection = new DbConnection();
+$conn = $dbConnection->getConnection();
 
 // Récupérer l'ID du jeu depuis l'URL
 $jeu_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-// Instancier la classe Game et récupérer les détails
 $game = new Game();
 $game->setJeu_id($jeu_id);
 $gameDetails = $game->getSelectedGame();
 
-// Rediriger si le jeu n'existe pas
 if (!$gameDetails) {
     header('Location: index.php');
     exit();
+}
+
+$_SESSION['game_id'] = $jeu_id;
+
+// Vérifier si l'enregistrement existe déjà
+$checkQuery = "SELECT COUNT(*) FROM historique WHERE users_id = :users_id AND jeu_id = :jeu_id";
+$checkStmt = $conn->prepare($checkQuery);
+$checkStmt->bindParam(':users_id', $_SESSION['user_id']);
+$checkStmt->bindParam(':jeu_id', $_SESSION['game_id']);
+$checkStmt->execute();
+
+$exists = $checkStmt->fetchColumn();
+
+// ajout dans l'historique
+
+if ($exists == 0) {
+    // Insérer uniquement si aucun enregistrement trouvé
+    $query = "INSERT INTO historique (users_id, jeu_id) VALUES (:users_id, :jeu_id)";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':users_id', $_SESSION['user_id']);
+    $stmt->bindParam(':jeu_id', $_SESSION['game_id']);
+    $stmt->execute();
+}
+
+// ajout dans la collection
+
+
+if(isset($_POST['addToCollection'])){
+    $query = "INSERT INTO bibliotheque (users_id, jeu_id) VALUES (:users_id, :jeu_id)";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':users_id', $_SESSION['user_id']);
+    $stmt->bindParam(':jeu_id', $_SESSION['game_id']);
+    $stmt->execute();
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,15 +70,18 @@ if (!$gameDetails) {
             background-clip: text;
             color: transparent;
         }
+
         .glow-effect {
             box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
         }
+
         body {
             background: linear-gradient(to bottom, #1e1b4b, #111827);
             min-height: 100vh;
         }
     </style>
 </head>
+
 <body class="text-zinc-100">
     <!-- Navigation -->
     <nav class="fixed w-full z-10 bg-zinc-900/30 backdrop-blur-sm border-b border-zinc-700/30">
@@ -59,10 +101,10 @@ if (!$gameDetails) {
                 <!-- Image Section -->
                 <div class="relative group">
                     <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden bg-zinc-800/30 backdrop-blur-sm border border-zinc-700/30">
-                        <img src="<?= !empty($gameDetails['image']) ? htmlspecialchars($gameDetails['image']) : 'images/default-game.jpg' ?>" 
-                             alt="<?= htmlspecialchars($gameDetails['title']) ?>"
-                             class="w-full h-full object-cover"
-                             onerror="this.src='images/default-game.jpg'">
+                        <img src="<?= !empty($gameDetails['image']) ? htmlspecialchars($gameDetails['image']) : 'images/default-game.jpg' ?>"
+                            alt="<?= htmlspecialchars($gameDetails['title']) ?>"
+                            class="w-full h-full object-cover"
+                            onerror="this.src='images/default-game.jpg'">
                     </div>
                 </div>
 
@@ -75,7 +117,7 @@ if (!$gameDetails) {
                     <!-- Rating -->
                     <div class="flex items-center space-x-2">
                         <div class="flex items-center">
-                            <?php for($i = 0; $i < 5; $i++): ?>
+                            <?php for ($i = 0; $i < 5; $i++): ?>
                                 <i class="fas fa-star <?= $i < $gameDetails['rating'] ? 'text-amber-400' : 'text-zinc-600' ?>"></i>
                             <?php endfor; ?>
                         </div>
@@ -116,14 +158,12 @@ if (!$gameDetails) {
 
                     <!-- Actions -->
                     <div class="flex space-x-4">
-                        <button class="px-6 py-3 bg-indigo-600/90 hover:bg-indigo-500 rounded-lg transition-colors glow-effect">
-                            <i class="fas fa-bookmark mr-2"></i>
-                            Ajouter à ma collection
-                        </button>
-                        <button class="px-6 py-3 bg-zinc-800/50 hover:bg-zinc-700/50 rounded-lg transition-colors">
-                            <i class="fas fa-share mr-2"></i>
-                            Partager
-                        </button>
+                        <form action="" method="POST">
+                            <button type="submit" name="addToCollection" class="px-6 py-3 bg-indigo-600/90 hover:bg-indigo-500 rounded-lg transition-colors glow-effect">
+                                <i class="fas fa-bookmark mr-2"></i>
+                                Ajouter à ma collection
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -138,4 +178,5 @@ if (!$gameDetails) {
         </div>
     </div>
 </body>
-</html> 
+
+</html>
