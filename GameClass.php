@@ -7,6 +7,9 @@ Class Game{
     private $admin_id;
     private $title;
     private $image;
+    private $image2;
+    private $image3;
+    private $image4;
     private $description;
     private $type;
     private $nb_users;
@@ -39,6 +42,9 @@ Class Game{
     public function setAdminId($admin_id) { $this->admin_id = $admin_id; }
     public function setTitle($title) { $this->title = $title; }
     public function setImage($image) { $this->image = $image; }
+    public function setImage2($image2) { $this->image2 = $image2; }
+    public function setImage3($image3) { $this->image3 = $image3; }
+    public function setImage4($image4) { $this->image4 = $image4; }
     public function setDescription($description) { $this->description = $description; }
     public function setType($type) { $this->type = $type; }
     public function setNbUsers($nb_users) { $this->nb_users = $nb_users; }
@@ -58,8 +64,8 @@ Class Game{
     }
 
     public function add() {
-            $query = "INSERT INTO jeu (admin_id, title, description, type, nb_users, rating, status, temps_jeu, date_sortie,image) 
-                     VALUES (:admin_id, :title, :description, :type, :nb_users, :rating, :status, :temps_jeu, :date_sortie, :image)";
+            $query = "INSERT INTO jeu (admin_id, title, description, type, nb_users, rating, status, temps_jeu, date_sortie,image,image2,image3,image4) 
+                     VALUES (:admin_id, :title, :description, :type, :nb_users, :rating, :status, :temps_jeu, :date_sortie, :image, :image2, :image3, :image4)";
             
             $stmt = $this->db->prepare($query);
             
@@ -73,6 +79,9 @@ Class Game{
             $stmt->bindParam(':temps_jeu', $this->temps_jeu);
             $stmt->bindParam(':date_sortie', $this->date_sortie);
             $stmt->bindParam(':image', $this->image);
+            $stmt->bindParam(':image2', $this->image2);
+            $stmt->bindParam(':image3', $this->image3);
+            $stmt->bindParam(':image4', $this->image4);
 
             if($stmt->execute()) {
                 $this->jeu_id = $this->db->lastInsertId();
@@ -90,7 +99,7 @@ Class Game{
     }
 
     public function getSelectedGame() {
-        $query = "SELECT jeu_id, title, description, image, type, rating, date_sortie, nb_users, temps_jeu, status 
+        $query = "SELECT jeu_id, title, description, image,image2,image3,image4, type, rating, date_sortie, nb_users, temps_jeu, status 
                   FROM jeu 
                   WHERE jeu_id = :jeu_id";
                   
