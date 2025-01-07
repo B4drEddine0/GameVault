@@ -192,7 +192,7 @@ $banned = $user->getBannedUsers();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($users as $userItem): ?>
+                        
                         <tr class="border-b border-gray-700">
                             <td class="p-4 flex items-center">
                                 <img src="<?php echo htmlspecialchars($userItem['image'])?>" class="rounded-full mr-3 w-10 h-10">

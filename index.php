@@ -35,6 +35,7 @@ $user = $stmt->fetch();
             background: linear-gradient(to bottom, #1e1b4b, #111827);
             min-height: 100vh;
         }
+
         .game-card {
             transition: transform 0.3s ease;
         }
@@ -71,7 +72,7 @@ $user = $stmt->fetch();
                         <div class="flex space-x-4">
                             <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Chat</a>
                             <?php if (isset($_SESSION['username'])): ?>
-                                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Ma Collection</a>
+                                <a href="bibliotheque.php" class="text-gray-300 hover:text-white px-3 py-2">Ma Collection</a>
                                 <a href="historique.php" class="text-gray-300 hover:text-white px-3 py-2">Mon Historique</a>
                                 <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Mes Favoris</a>
                             <?php endif; ?>
@@ -134,7 +135,6 @@ $user = $stmt->fetch();
         </div>
     </div>
 
-    <!-- Games Grid -->
     <div class="bg-[#1e1b4b]/10 backdrop-blur-sm border-t border-b border-zinc-700/30">
         <div class="max-w-7xl mx-auto px-6 py-16">
             <h2 class="text-3xl font-bold mb-8">Jeux <span class="gradient-text">Populaires</span></h2>
@@ -172,7 +172,7 @@ $user = $stmt->fetch();
                             <div class="flex justify-between items-center">
                                 <span class="text-sm text-gray-400"><?= htmlspecialchars($gameItem['type']) ?></span>
                                 <button class="text-[#4ECDC4] hover:text-white transition-colors">
-                                    <i class="fas fa-bookmark"></i>
+                                    <i class="far fa-bookmark"></i>
                                 </button>
                             </div>
                         </div>
