@@ -19,11 +19,12 @@ if(isset($_GET['id'])) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .gradient-text {
-            background: linear-gradient(to right, #818cf8, #6366f1);
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
+
         .glow-effect {
             box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
         }
@@ -66,8 +67,20 @@ if(isset($_GET['id'])) {
 
                 <div>
                     <label class="block text-zinc-300 mb-2">Type</label>
-                    <input type="text" name="type" value="<?= htmlspecialchars($gameInfo['type']) ?>" required 
-                           class="w-full px-4 py-3 rounded-lg bg-[#1e1b4b]/50 border border-zinc-700/50 text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:ring-opacity-50 transition-all">
+                           <select name="type" value="<?= htmlspecialchars($gameInfo['type']) ?>" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600">
+                            <option value="Action">Action</option>
+                            <option value="Aventure">Aventure</option>
+                            <option value="Football">Football</option>
+                            <option value="Battlefield">Battlefield</option>
+                            <option value="Racing">Racing</option>
+                            <option value="RPG">RPG</option>
+                            <option value="Strategy">Strategy</option>
+                            <option value="Puzzle">Puzzle</option>
+                            <option value="Simulation">Simulation</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Fighting">Fighting</option>
+                           </select>
                 </div>
 
                 <div>
