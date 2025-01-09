@@ -33,14 +33,14 @@ $exists = $checkStmt->fetchColumn();
 
 // ajout dans l'historique
 
-if ($exists == 0) {
-    // Insérer uniquement si aucun enregistrement trouvé
-    $query = "INSERT INTO historique (users_id, jeu_id) VALUES (:users_id, :jeu_id)";
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':users_id', $_SESSION['user_id']);
-    $stmt->bindParam(':jeu_id', $_SESSION['game_id']);
-    $stmt->execute();
-}
+// if ($exists == 0) {
+//     // Insérer uniquement si aucun enregistrement trouvé
+//     $query = "INSERT INTO historique (users_id, jeu_id) VALUES (:users_id, :jeu_id)";
+//     $stmt = $conn->prepare($query);
+//     $stmt->bindParam(':users_id', $_SESSION['user_id']);
+//     $stmt->bindParam(':jeu_id', $_SESSION['game_id']);
+//     $stmt->execute();
+// }
 
 // ajout dans la collection
 
@@ -52,6 +52,7 @@ if(isset($_POST['addToCollection'])){
     $stmt->bindParam(':jeu_id', $_SESSION['game_id']);
     $stmt->execute();
 }
+
 ?>
 
 <!DOCTYPE html>

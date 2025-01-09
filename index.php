@@ -74,7 +74,7 @@ $user = $stmt->fetch();
                             <?php if (isset($_SESSION['username'])): ?>
                                 <a href="bibliotheque.php" class="text-gray-300 hover:text-white px-3 py-2">Ma Collection</a>
                                 <a href="historique.php" class="text-gray-300 hover:text-white px-3 py-2">Mon Historique</a>
-                                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Mes Favoris</a>
+                                <a href="favoris.php" class="text-gray-300 hover:text-white px-3 py-2">Mes Favoris</a>
                             <?php endif; ?>
                         </div>
                     </div>

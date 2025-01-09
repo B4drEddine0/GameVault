@@ -100,3 +100,9 @@ VALUES ('utilisateur', 'nouvel_utilisateur@example.com', 'motdepasse', 'joueur',
 
 ALTER TABLE users
 Add COLUMN statut VARCHAR(50) DEFAULT 'Active';
+
+ALTER TABLE jeu
+ADD COLUMN image4 VARCHAR(255) ;
+
+ALTER TABLE bibliotheque
+ADD CONSTRAINT unique_user_game UNIQUE (users_id, jeu_id);
