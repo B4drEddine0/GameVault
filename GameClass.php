@@ -136,5 +136,86 @@ Class Game{
         $stmt->execute();
         header('location: dashboard.php');
     }
+
+    public function getCollectionCount() {
+        $query = "SELECT COUNT(*) as count FROM bibliotheque WHERE jeu_id = :jeu_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(['jeu_id' => $this->jeu_id]);
+        $result = $stmt->fetch();
+        return $result['count'];
+    }
+
+    public function addView(){
+        $query = "UPDATE jeu SET vues = vues+1 WHERE jeu_id = :jeu_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(['jeu_id' => $this->jeu_id]);
+    }
+    public function getViewCount() {
+        $query = "SELECT vues as count FROM jeu WHERE jeu_id = :jeu_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(['jeu_id' => $this->jeu_id]);
+        $result = $stmt->fetch();
+        return $result['count'];
+    }
+
+    public function getCommentCount() {
+        $query = "SELECT COUNT(*) as count FROM notation WHERE jeu_id = :jeu_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute(['jeu_id' => $this->jeu_id]);
+        $result = $stmt->fetch();
+        return $result['count'];
+    }
+
+    public function addNotation($users_id,$jeu_id,$rating,$content) {
+        $query = "SELECT users_id, jeu_id, rating, content FROM notation where jeu_id = :jeu_id AND users_id = :users_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':users_id', $users_id);
+        $stmt->bindParam(':jeu_id', $jeu_id);
+        $stmt->execute();
+        if($stmt->rowCount() > 0){
+            $query = "UPDATE notation SET rating=:rating, content=:content,create_at= NOW() where jeu_id = :jeu_id AND users_id = :users_id";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':users_id', $users_id);
+            $stmt->bindParam(':jeu_id', $jeu_id);
+            $stmt->bindParam(':rating', $rating);
+            $stmt->bindParam(':content', $content);
+            if($stmt->execute()){
+                return true; 
+                }   
+        }else{
+            $query = "INSERT INTO notation (users_id, jeu_id, rating, content) VALUES 
+                (:users_id, :jeu_id, :rating, :content)";
+        
+            $stmt = $this->db->prepare($query);
+            
+            $stmt->bindParam(':users_id', $users_id);
+            $stmt->bindParam(':jeu_id', $jeu_id);
+            $stmt->bindParam(':rating', $rating);
+            $stmt->bindParam(':content', $content);
+            if($stmt->execute()){
+            return true; 
+            }   
+        }
+    }
+
+    public function getNotation($jeu_id) {
+        $query = "SELECT u.users_id, n.jeu_id, n.rating, n.content, u.username, u.image, n.create_at
+        FROM notation n JOIN users u ON n.users_id = u.users_id WHERE n.jeu_id = :jeu_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':jeu_id', $jeu_id);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function avgRate($jeu_id){
+        $query = 'SELECT AVG(rating) as total_rate FROM notation WHERE jeu_id = :jeu_id';
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam('jeu_id',$jeu_id);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        return isset($result['total_rate']) ? $result['total_rate'] : 0;
+    }
 }
 ?>
