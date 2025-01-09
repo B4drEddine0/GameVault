@@ -100,3 +100,5 @@ VALUES ('utilisateur', 'nouvel_utilisateur@example.com', 'motdepasse', 'joueur',
 
 ALTER TABLE users
 Add COLUMN statut VARCHAR(50) DEFAULT 'Active';
+
+alter table jeu add COLUMN vues int;

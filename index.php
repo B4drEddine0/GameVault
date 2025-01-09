@@ -1,8 +1,7 @@
 <?php
 session_start();
-include('connexion.php');
+require_once 'connexion.php';
 require_once 'GameClass.php';
-
 
 $dbConnection = new DbConnection();
 $conn = $dbConnection->getConnection();
@@ -35,7 +34,6 @@ $user = $stmt->fetch();
             background: linear-gradient(to bottom, #1e1b4b, #111827);
             min-height: 100vh;
         }
-
         .game-card {
             transition: transform 0.3s ease;
         }
@@ -60,7 +58,6 @@ $user = $stmt->fetch();
 </head>
 
 <body class="bg-[#0F172A] text-gray-100">
-    <!-- Header -->
     <nav class="fixed w-full z-10 bg-zinc-900/30 backdrop-blur-sm border-b border-zinc-700/30">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex justify-between h-16">
@@ -72,7 +69,7 @@ $user = $stmt->fetch();
                         <div class="flex space-x-4">
                             <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Chat</a>
                             <?php if (isset($_SESSION['username'])): ?>
-                                <a href="bibliotheque.php" class="text-gray-300 hover:text-white px-3 py-2">Ma Collection</a>
+                                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Ma Collection</a>
                                 <a href="historique.php" class="text-gray-300 hover:text-white px-3 py-2">Mon Historique</a>
                                 <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Mes Favoris</a>
                             <?php endif; ?>
@@ -110,7 +107,6 @@ $user = $stmt->fetch();
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <div class="relative min-h-screen flex items-center">
         <div class="absolute inset-0 bg-[#1e1b4b]/50"></div>
         <div class="relative max-w-7xl mx-auto px-6 py-32">
@@ -121,7 +117,7 @@ $user = $stmt->fetch();
                 Votre <span class="gradient-text">Collection</span><br>
                 Votre <span class="gradient-text">Univers</span>
             </p>
-            <!-- Search Bar -->
+
             <div class="max-w-2xl">
                 <div class="relative">
                     <input type="text"
@@ -134,6 +130,7 @@ $user = $stmt->fetch();
             </div>
         </div>
     </div>
+
 
     <div class="bg-[#1e1b4b]/10 backdrop-blur-sm border-t border-b border-zinc-700/30">
         <div class="max-w-7xl mx-auto px-6 py-16">
@@ -164,15 +161,15 @@ $user = $stmt->fetch();
                             <div class="flex items-center mb-3">
                                 <div class="flex items-center text-[#FFD700]">
                                     <?php for ($i = 0; $i < 5; $i++): ?>
-                                        <i class="fas fa-star <?= $i < $gameItem['rating'] ? 'text-[#FFD700]' : 'text-gray-600' ?> text-sm"></i>
+                                        <i class="fas fa-star <?= $i < $game->avgRate($gameItem['jeu_id']) ? 'text-[#FFD700]' : 'text-gray-600' ?> text-sm"></i>
                                     <?php endfor; ?>
                                 </div>
-                                <span class="ml-2 text-sm text-gray-400"><?= number_format($gameItem['rating'], 1) ?></span>
+                                <span class="ml-2 text-sm text-gray-400"><?= number_format($game->avgRate($gameItem['jeu_id']), 1) ?></span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-sm text-gray-400"><?= htmlspecialchars($gameItem['type']) ?></span>
                                 <button class="text-[#4ECDC4] hover:text-white transition-colors">
-                                    <i class="far fa-bookmark"></i>
+                                    <i class="fas fa-bookmark"></i>
                                 </button>
                             </div>
                         </div>
@@ -183,12 +180,12 @@ $user = $stmt->fetch();
         </div>
     </div>
 
-    <!-- Functionality Section -->
+  
     <div class="bg-[#1e1b4b]/30 backdrop-blur-sm border-t border-b border-zinc-700/30">
         <div class="max-w-7xl mx-auto px-6 py-20">
             <h2 class="text-3xl font-bold text-center mb-12">Nos <span class="gradient-text">Fonctionnalités</span></h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Collection Card -->
+
                 <div class="bg-[#1e1b4b]/40 p-6 rounded-lg backdrop-blur-sm border border-zinc-700/30 hover:border-indigo-500/50 transition-colors group">
                     <div class="bg-indigo-600/20 p-3 rounded-lg w-12 h-12 flex items-center justify-center mb-4 group-hover:bg-indigo-600/30 transition-colors">
                         <i class="fas fa-folder text-indigo-400"></i>
@@ -197,7 +194,6 @@ $user = $stmt->fetch();
                     <p class="text-zinc-400">Organisez et suivez votre bibliothèque de jeux en un seul endroit.</p>
                 </div>
 
-                <!-- Community Card -->
                 <div class="bg-[#1e1b4b]/40 p-6 rounded-lg backdrop-blur-sm border border-zinc-700/30 hover:border-indigo-500/50 transition-colors group">
                     <div class="bg-indigo-600/20 p-3 rounded-lg w-12 h-12 flex items-center justify-center mb-4 group-hover:bg-indigo-600/30 transition-colors">
                         <i class="fas fa-users text-indigo-400"></i>
@@ -206,7 +202,6 @@ $user = $stmt->fetch();
                     <p class="text-zinc-400">Partagez vos expériences et découvrez celles des autres joueurs.</p>
                 </div>
 
-                <!-- Stats Card -->
                 <div class="bg-[#1e1b4b]/40 p-6 rounded-lg backdrop-blur-sm border border-zinc-700/30 hover:border-indigo-500/50 transition-colors group">
                     <div class="bg-indigo-600/20 p-3 rounded-lg w-12 h-12 flex items-center justify-center mb-4 group-hover:bg-indigo-600/30 transition-colors">
                         <i class="fas fa-chart-bar text-indigo-400"></i>
@@ -222,13 +217,11 @@ $user = $stmt->fetch();
     <footer class="bg-[#1e1b4b]/40 backdrop-blur-sm border-t border-zinc-700/30">
         <div class="max-w-7xl mx-auto px-6 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <!-- Logo Section -->
                 <div class="col-span-1">
                     <h2 class="text-2xl font-bold mb-4">Game<span class="gradient-text">Vault</span></h2>
                     <p class="text-zinc-400">Votre univers gaming, simplifié.</p>
                 </div>
 
-                <!-- Quick Links -->
                 <div class="col-span-1">
                     <h3 class="text-lg font-semibold mb-4">Navigation</h3>
                     <ul class="space-y-2">
@@ -238,7 +231,6 @@ $user = $stmt->fetch();
                     </ul>
                 </div>
 
-                <!-- Community -->
                 <div class="col-span-1">
                     <h3 class="text-lg font-semibold mb-4">Communauté</h3>
                     <ul class="space-y-2">
@@ -248,7 +240,6 @@ $user = $stmt->fetch();
                     </ul>
                 </div>
 
-                <!-- Social Links -->
                 <div class="col-span-1">
                     <h3 class="text-lg font-semibold mb-4">Suivez-nous</h3>
                     <div class="flex space-x-4">
@@ -265,9 +256,8 @@ $user = $stmt->fetch();
                 </div>
             </div>
 
-            <!-- Bottom Bar -->
             <div class="border-t border-zinc-700/30 mt-8 pt-8 text-center text-zinc-400">
-                <p>&copy; 2024 GameVault. Tous droits réservés.</p>
+                <p>&copy; 2025 GameVault by MassaAlKhayr. Tous droits réservés.</p>
             </div>
         </div>
     </footer>

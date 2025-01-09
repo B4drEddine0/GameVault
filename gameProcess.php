@@ -68,4 +68,17 @@ if(isset($_GET['banne'])){
         $user->BannUser($id);
     }
 }
+
+if(isset($_POST['SubReview'])){
+    $users_id = $_SESSION['user_id'];
+    $jeu_id = $_POST['game_id'];
+    $rating = $_POST['rating'];
+    $content = $_POST['review'];
+
+    $game = new Game();
+    if($game->addNotation($users_id,$jeu_id,$rating,$content)){
+        header('Location: game_details.php?id=' . $jeu_id);
+        exit();
+    }
+}
 ?> 
