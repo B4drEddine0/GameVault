@@ -13,6 +13,39 @@ if(isset($_GET['id'])) {
     exit();
 }
 
+$_SESSION['game_id'] = $jeu_id;
+
+// Vérifier si l'enregistrement existe déjà
+$checkQuery = "SELECT COUNT(*) FROM historique WHERE users_id = :users_id AND jeu_id = :jeu_id";
+$checkStmt = $conn->prepare($checkQuery);
+$checkStmt->bindParam(':users_id', $_SESSION['user_id']);
+$checkStmt->bindParam(':jeu_id', $_SESSION['game_id']);
+$checkStmt->execute();
+
+$exists = $checkStmt->fetchColumn();
+
+// ajout dans l'historique
+
+// if ($exists == 0) {
+//     // Insérer uniquement si aucun enregistrement trouvé
+//     $query = "INSERT INTO historique (users_id, jeu_id) VALUES (:users_id, :jeu_id)";
+//     $stmt = $conn->prepare($query);
+//     $stmt->bindParam(':users_id', $_SESSION['user_id']);
+//     $stmt->bindParam(':jeu_id', $_SESSION['game_id']);
+//     $stmt->execute();
+// }
+
+// ajout dans la collection
+
+
+if(isset($_POST['addToCollection'])){
+    $query = "INSERT INTO bibliotheque (users_id, jeu_id) VALUES (:users_id, :jeu_id)";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':users_id', $_SESSION['user_id']);
+    $stmt->bindParam(':jeu_id', $_SESSION['game_id']);
+    $stmt->execute();
+}
+
 
 
 ?>

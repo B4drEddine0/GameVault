@@ -40,9 +40,7 @@
             <!-- Header -->
             <div class="flex justify-between items-center mb-8">
                 <h2 class="text-2xl font-bold">Votre <span class="gradient-text">Historique</span></h2>
-                <button class="text-zinc-400 hover:text-white transition-colors">
-                    <i class="fas fa-trash-alt"></i> Effacer l'historique
-                </button>
+                
             </div>
 
             <!-- Timeline -->
