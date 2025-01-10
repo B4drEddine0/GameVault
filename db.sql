@@ -106,3 +106,18 @@ ADD COLUMN image4 VARCHAR(255) ;
 
 ALTER TABLE bibliotheque
 ADD CONSTRAINT unique_user_game UNIQUE (users_id, jeu_id);
+
+ALTER TABLE jeu
+ADD COLUMN vues INT ;
+
+ALTER TABLE jeu
+MODIFY COLUMN vues INT DEFAULT 1;
+
+ALTER TABLE jeu
+DROP COLUMN temps_jeu;
+
+ALTER TABLE bibliotheque
+ADD COLUMN temps_jeu TIME DEFAULT 0 ;
+
+ALTER TABLE bibliotheque
+ADD COLUMN status ENUM ('En cours', 'Terminé', 'Abondone') DEFAULT 'En cours';

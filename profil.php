@@ -1,9 +1,9 @@
 <?php
 session_start();
-include('connexion.php'); 
+include('connexion.php');
 
 $dbConnection = new DbConnection();
-$conn = $dbConnection->getConnection(); 
+$conn = $dbConnection->getConnection();
 if (!isset($_SESSION['username'])) {
     header('Location: signin.php');
     exit;
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$new_username, $new_email, $new_image, $username]);
     }
 
- 
+
     $_SESSION['username'] = $new_username;
 
     header('Location: profil.php');
@@ -55,6 +55,7 @@ $user = $stmt->fetch();
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -123,18 +124,52 @@ $user = $stmt->fetch();
         }
     </style>
 </head>
-<body class="bg-[#0F172A] text-gray-100">
-    <nav class="bg-zinc-900/30 fixed w-full z-10">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                <h1 class="text-2xl font-bold">Game<span class="gradient-text">Vault</span></h1>
 
+<body class="bg-[#0F172A] text-gray-100">
+    <nav class="fixed w-full z-10 bg-zinc-900/30 backdrop-blur-sm border-b border-zinc-700/30">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center space-x-8">
+                    <h1 class="text-2xl font-bold">Game<span class="gradient-text">Vault</span></h1>
                     <div class="ml-10 flex items-center space-x-4">
-                        <a href="index.php" class="text-gray-300 hover:text-white px-3 py-2">Accueil</a>
+                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Accueil</a>
                         <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Jeux</a>
-                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Chat</a>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Chat</a>
+                            <?php if (isset($_SESSION['username'])): ?>
+                                <a href="bibliotheque.php" class="text-gray-300 hover:text-white px-3 py-2">Ma Collection</a>
+                                <a href="historique.php" class="text-gray-300 hover:text-white px-3 py-2">Mon Historique</a>
+                                <a href="favoris.php" class="text-gray-300 hover:text-white px-3 py-2">Mes Favoris</a>
+                            <?php endif; ?>
+                        </div>
                     </div>
+                </div>
+                <div class="flex items-center">
+                    <?php if (isset($_SESSION['username'])): ?>
+                        <div class="flex items-center space-x-4">
+                            <img src="<?php echo htmlspecialchars($user['image'] ?? 'images/profil.webp'); ?>"
+                                alt=""
+                                class="w-10 h-10 rounded-full cursor-pointer"
+                                onclick="window.location.href='profil.php';">
+                            <span class="text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                            <button
+                                class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
+                                onclick="window.location.href='logout.php';">
+                                Déconnexion
+                            </button>
+                        </div>
+                    <?php else: ?>
+                        <button
+                            class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg mr-4"
+                            onclick="window.location.href='signin.php';">
+                            Connexion
+                        </button>
+                        <button
+                            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
+                            onclick="window.location.href='signup.php';">
+                            Inscription
+                        </button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -145,7 +180,7 @@ $user = $stmt->fetch();
             <div class="bg-zinc-900/30 rounded-lg p-6 mb-6">
                 <div class="flex items-start space-x-6">
                     <div class="relative">
-                        <img src="<?php echo htmlspecialchars($user['image']) ; ?>" alt="Profile" class="w-32 h-32 rounded-full">
+                        <img src="<?php echo htmlspecialchars($user['image']); ?>" alt="Profile" class="w-32 h-32 rounded-full">
                         <button class="absolute bottom-0 right-0 bg-purple-600 p-2 rounded-full hover:bg-purple-700">
                             <i class="fas fa-camera"></i>
                         </button>
@@ -156,9 +191,11 @@ $user = $stmt->fetch();
                                 <h2 class="text-2xl font-bold"><?php echo htmlspecialchars($user['username']); ?></h2>
                                 <p class="text-gray-400">@<?php echo htmlspecialchars($user['username']); ?></p>
                             </div>
-                            <button class="bg-purple-600 px-4 py-2 rounded-lg hover:bg-purple-700">
-                                Éditer le profil
-                            </button>
+                            <?php if ($user['role_user'] === 'admin'): ?>
+                                <button onclick="window.location.href='dashboard.php';" class="bg-blue-600 px-4 py-2 rounded-lg hover:bg-blue-700">
+                                    Dashboard
+                                </button>
+                            <?php endif; ?>
                         </div>
                         <p class="mt-4 text-gray-300">Rôle: <?php echo htmlspecialchars($user['role_user']); ?></p>
                     </div>
@@ -193,4 +230,5 @@ $user = $stmt->fetch();
         </div>
     </div>
 </body>
+
 </html>
