@@ -1,10 +1,13 @@
 <?php
 session_start();
-require_once 'GameClass.php';
-require_once 'classUser.php';
+require_once __DIR__ . '/../config/connexion.php';
+require_once __DIR__ . '/../classes/Game.php';
+require_once __DIR__ . '/../classes/User.php';
 
 $user = new User();
 $banned = $user->getBannedUsers();
+
+include __DIR__ . '/components/header.php';
 ?>
 
 <!DOCTYPE html>
@@ -362,3 +365,5 @@ $banned = $user->getBannedUsers();
     </script>
 </body>
 </html>
+
+include __DIR__ . '/components/footer.php';

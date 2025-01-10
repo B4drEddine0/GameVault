@@ -1,8 +1,7 @@
 <?php
 session_start();
-require_once 'GameClass.php';
-require_once 'classUser.php';
-require_once 'ChatClass.php';
+require_once __DIR__ . '/../config/connexion.php';
+require_once __DIR__ . '/../classes/Game.php';
 
 if (isset($_POST['ajoute'])) {
         $game = new Game();
@@ -23,7 +22,7 @@ if (isset($_POST['ajoute'])) {
         $game->setTempsJeu(0);
 
         if($game->add()) {
-            header('location: dashboard.php');
+            header('Location: /views/dashboard.php');
         }
 }
 
@@ -31,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $id = $_GET['deletedId'];
     $game = new Game();
     if($game->deleteGame($id)) {
-        header('location: dashboard.php');
+        header('Location: /views/dashboard.php');
     }
 }
 

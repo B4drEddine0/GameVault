@@ -1,5 +1,6 @@
 <?php
-require_once "connexion.php";
+require_once __DIR__ . '/../config/connexion.php';
+
 class User {
     private $id;
     private $username;
@@ -125,7 +126,7 @@ class User {
         $stmt->bindParam(':users_id', $this->id);
 
         if($stmt->execute()) {
-            header('location: dashboard.php');
+            header('Location: /views/dashboard.php');
         }
         return false;
     }
@@ -161,7 +162,7 @@ class User {
         $stmt2 = $this->db->prepare($query2);
         $stmt2->bindParam(':users_id',$id);
         $stmt2->execute();
-        header('Location: dashboard.php');
+        header('Location: /views/dashboard.php');
         exit();
     }
 
@@ -175,7 +176,7 @@ class User {
         $stmt2 = $this->db->prepare($query2);
         $stmt2->bindParam(':users_id',$id);
         $stmt2->execute();
-        header('Location: dashboard.php');
+        header('Location: /views/dashboard.php');
         exit();
     }
 

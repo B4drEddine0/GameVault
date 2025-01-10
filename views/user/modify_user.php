@@ -35,6 +35,7 @@ if(isset($_GET['id'])) {
     </style>
 </head>
 <body class="text-zinc-100">
+    
     <div class="min-h-screen flex items-center justify-center p-6">
         <div class="bg-[#1e1b4b]/30 backdrop-blur-sm p-8 rounded-lg border border-indigo-500/10 w-full max-w-2xl">
             <div class="flex items-center justify-between mb-6">

@@ -1,8 +1,10 @@
 <?php
 session_start();
-require_once 'GameClass.php';
-require_once 'ChatClass.php';
-require_once 'classUser.php';
+require_once __DIR__ . '/../../config/connexion.php';
+require_once __DIR__ . '/../../classes/Game.php';
+require_once __DIR__ . '/../../classes/User.php';
+
+include __DIR__ . '/../components/header.php';
 
 if(isset($_GET['id'])) {
     $game = new Game();
@@ -88,16 +90,6 @@ if(isset($_GET['id'])) {
     </style>
 </head>
 <body class="text-zinc-100">
-    <nav class="fixed w-full z-10 bg-zinc-900/30 backdrop-blur-sm border-b border-zinc-700/30">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center space-x-8">
-                    <a href="index.php" class="text-2xl font-bold">Game<span class="gradient-text">Vault</span></a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
     <div class="pt-20 min-h-screen">
         <div class="max-w-7xl mx-auto px-6 py-12">
             <div class="grid md:grid-cols-2 gap-12">
@@ -218,8 +210,8 @@ if(isset($_GET['id'])) {
                                                     <h4 class="font-bold"><?php echo $notation['username']?></h4>
                                                     <div class="flex items-center">
                                                         <div class="flex text-amber-400">
-                                                        <?php for($i = 0; $i < 5; $i++): ?>
-                                                            <i class="fas fa-star <?= $i < $notation['rating'] ? 'text-amber-400' : 'text-zinc-600' ?>"></i>
+                                                        <?php for ($i = 0; $i < 5; $i++): ?>
+                                                             <i class="fas fa-star <?= $i < $game->avgRate($_GET['id']) ? 'text-amber-400' : 'text-zinc-600' ?>"></i>
                                                         <?php endfor; ?>
                                                         </div>
                                                         <span class="text-zinc-400 text-sm ml-2"><?php echo htmlspecialchars($notation['create_at']);?></span>
@@ -245,7 +237,7 @@ if(isset($_GET['id'])) {
                                 </button>
                             </div>
 
-                            <form id="reviewForm" action='GameProcess.php' method='POST' class="space-y-6">
+                            <form id="reviewForm" action='/processes/gameProcess.php' method='POST' class="space-y-6">
                                 <input type="hidden" name="game_id" value="<?= $gameDetails['jeu_id'] ?>">
                                 <div>
                                     <label class="block text-zinc-300 mb-2">Note</label>
@@ -314,7 +306,7 @@ if(isset($_GET['id'])) {
                                 </div>
                                 <?php endforeach;?>
                             </div>
-                            <form method='POST' action='gameProcess.php'>
+                            <form method='POST' action='/processes/gameProcess.php'>
                             <div class="p-4 border-t border-zinc-700/30">
                                 <div class="flex space-x-2">
                                     <input type="hidden" name='jeuId' value='<?=$jeu_id?>'>
@@ -332,53 +324,9 @@ if(isset($_GET['id'])) {
             </div>
 
 
-    <footer class="bg-[#1e1b4b]/40 backdrop-blur-sm border-t border-zinc-700/30">
-        <div class="max-w-7xl mx-auto px-6 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div class="col-span-1">
-                    <h2 class="text-2xl font-bold mb-4">Game<span class="gradient-text">Vault</span></h2>
-                    <p class="text-zinc-400">Votre univers gaming, simplifié.</p>
-                </div>
+    <?php include __DIR__ . '/../components/footer.php'; ?> 
+    </body>
 
-                <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-4">Navigation</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Découvrir</a></li>
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Bibliothèque</a></li>
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Communauté</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-4">Communauté</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Discord</a></li>
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Forum</a></li>
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Blog</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-4">Suivez-nous</h3>
-                    <div class="flex space-x-4">
-                        <a href="#" class="bg-indigo-600/20 p-2 rounded-lg hover:bg-indigo-600/30 transition-colors">
-                            <i class="fab fa-discord text-zinc-400 hover:text-white"></i>
-                        </a>
-                        <a href="#" class="bg-indigo-600/20 p-2 rounded-lg hover:bg-indigo-600/30 transition-colors">
-                            <i class="fab fa-twitter text-zinc-400 hover:text-white"></i>
-                        </a>
-                        <a href="#" class="bg-indigo-600/20 p-2 rounded-lg hover:bg-indigo-600/30 transition-colors">
-                            <i class="fab fa-twitch text-zinc-400 hover:text-white"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="border-t border-zinc-700/30 mt-8 pt-8 text-center text-zinc-400">
-                <p>&copy; 2025 GameVault by MassaAlKhayr. Tous droits réservés.</p>
-            </div>
-        </div>
-    </footer>
     <script>
         function toggleChat() {
             const chatWindow = document.getElementById('chatWindow');
@@ -397,7 +345,7 @@ if(isset($_GET['id'])) {
 
         function toggleReviewModal() {
             const modal = document.getElementById('reviewModal');
-            modal.classList.remove('hidden');
+            modal.classList.toggle('hidden');
             modal.classList.toggle('flex');
         }
 
@@ -422,5 +370,5 @@ if(isset($_GET['id'])) {
         
         document.getElementById('revBtn').onclick = toggleReviewModal;
     </script>
-</body>
-</html> 
+
+</html>
