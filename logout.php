@@ -1,5 +1,5 @@
 <?php
 session_start();
 session_destroy();
-header('Location: /views/user/signin.php');
+header('Location: signin.php');
 ?>

@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../config/connexion.php';
-require_once __DIR__ . '/../../classes/User.php';
+require_once 'connexion.php';
+require_once 'UserClass.php';
 
 $error = $success = '';
 
