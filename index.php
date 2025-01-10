@@ -59,54 +59,7 @@ $_SESSION['added'] = false;
 </head>
 
 <body class="bg-[#0F172A] text-gray-100">
-    <nav class="fixed w-full z-10 bg-zinc-900/30 backdrop-blur-sm border-b border-zinc-700/30">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center space-x-8">
-                    <h1 class="text-2xl font-bold">Game<span class="gradient-text">Vault</span></h1>
-                    <div class="ml-10 flex items-center space-x-4">
-                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Accueil</a>
-                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Jeux</a>
-                        <div class="flex space-x-4">
-                            <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Chat</a>
-                            <?php if (isset($_SESSION['username'])): ?>
-                                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Ma Collection</a>
-                                <a href="historique.php" class="text-gray-300 hover:text-white px-3 py-2">Mon Historique</a>
-                                <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Mes Favoris</a>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center">
-                    <?php if (isset($_SESSION['username'])): ?>
-                        <div class="flex items-center space-x-4">
-                            <img src="<?php echo htmlspecialchars($user['image'] ?? 'images/profil.webp'); ?>"
-                                alt=""
-                                class="w-10 h-10 rounded-full cursor-pointer"
-                                onclick="window.location.href='profil.php';">
-                            <span class="text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                            <button
-                                class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
-                                onclick="window.location.href='logout.php';">
-                                Déconnexion
-                            </button>
-                        </div>
-                    <?php else: ?>
-                        <button
-                            class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg mr-4"
-                            onclick="window.location.href='signin.php';">
-                            Connexion
-                        </button>
-                        <button
-                            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
-                            onclick="window.location.href='signup.php';">
-                            Inscription
-                        </button>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </nav>
+<?php include 'header.php'?>
 
     <div class="relative min-h-screen flex items-center">
         <div class="absolute inset-0 bg-[#1e1b4b]/50"></div>
@@ -214,54 +167,7 @@ $_SESSION['added'] = false;
         </div>
     </div>
 
-    <!-- Gaming Footer -->
-    <footer class="bg-[#1e1b4b]/40 backdrop-blur-sm border-t border-zinc-700/30">
-        <div class="max-w-7xl mx-auto px-6 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div class="col-span-1">
-                    <h2 class="text-2xl font-bold mb-4">Game<span class="gradient-text">Vault</span></h2>
-                    <p class="text-zinc-400">Votre univers gaming, simplifié.</p>
-                </div>
-
-                <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-4">Navigation</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Découvrir</a></li>
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Bibliothèque</a></li>
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Communauté</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-4">Communauté</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Discord</a></li>
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Forum</a></li>
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Blog</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-4">Suivez-nous</h3>
-                    <div class="flex space-x-4">
-                        <a href="#" class="bg-indigo-600/20 p-2 rounded-lg hover:bg-indigo-600/30 transition-colors">
-                            <i class="fab fa-discord text-zinc-400 hover:text-white"></i>
-                        </a>
-                        <a href="#" class="bg-indigo-600/20 p-2 rounded-lg hover:bg-indigo-600/30 transition-colors">
-                            <i class="fab fa-twitter text-zinc-400 hover:text-white"></i>
-                        </a>
-                        <a href="#" class="bg-indigo-600/20 p-2 rounded-lg hover:bg-indigo-600/30 transition-colors">
-                            <i class="fab fa-twitch text-zinc-400 hover:text-white"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="border-t border-zinc-700/30 mt-8 pt-8 text-center text-zinc-400">
-                <p>&copy; 2025 GameVault by MassaAlKhayr. Tous droits réservés.</p>
-            </div>
-        </div>
-    </footer>
+    <?php include 'footer.php'?>
 </body>
 
 </html>
