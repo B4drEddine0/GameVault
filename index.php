@@ -105,7 +105,7 @@ $_SESSION['added'] = false;
                                 class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-120"
                                 onerror="this.src='assets/images/default-game.jpg'">
                             <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                <a href="/Briefs/Brief-10/GameVault/views/game/game_details.php?id=<?= $gameItem['jeu_id'] ?>"
+                                <a href="game_details.php?id=<?= $gameItem['jeu_id'] ?>"
                                     class="px-4 py-2 bg-indigo-600 rounded-md text-white transform -translate-y-2 group-hover:translate-y-0 transition-all">
                                     Voir détails
                                 </a>

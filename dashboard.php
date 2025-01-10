@@ -7,7 +7,6 @@ require_once 'UserClass.php';
 $user = new User();
 $banned = $user->getBannedUsers();
 
-include 'header.php';
 ?>
 
 <!DOCTYPE html>
@@ -327,7 +326,6 @@ include 'header.php';
         </div>
     </div>
 
-    <?php include 'footer.php' ?>
     <script>
     function openAddGameModal() {
         document.getElementById('addGameModal').classList.remove('hidden');
