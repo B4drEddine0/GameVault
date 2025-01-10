@@ -21,7 +21,10 @@ if (!$userId) {
 $favoris = new Favoris($conn);
 $favorisData = $favoris->GetFavoris($userId);
 
-
+$query = "SELECT image FROM users WHERE username = ?";
+$stmt = $conn->prepare($query);
+$stmt->execute([$_SESSION['username']]);
+$user = $stmt->fetch();
 
 ?>
 
@@ -74,26 +77,44 @@ $favorisData = $favoris->GetFavoris($userId);
                 <div class="flex items-center space-x-8">
                     <h1 class="text-2xl font-bold">Game<span class="gradient-text">Vault</span></h1>
                     <div class="ml-10 flex items-center space-x-4">
-                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Accueil</a>
+                        <a href="index.php" class="text-gray-300 hover:text-white px-3 py-2">Accueil</a>
                         <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Jeux</a>
-                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Chat</a>
-                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Ma Collection</a>
-                        <a href="historique.php" class="text-gray-300 hover:text-white px-3 py-2">Mon Historique</a>
-                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Mes Favoris</a>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Chat</a>
+                            <?php if (isset($_SESSION['username'])): ?>
+                                <a href="bibliotheque.php" class="text-gray-300 hover:text-white px-3 py-2">Ma Collection</a>
+                                <a href="historique.php" class="text-gray-300 hover:text-white px-3 py-2">Mon Historique</a>
+                                <a href="favoris.php" class="text-gray-300 hover:text-white px-3 py-2">Mes Favoris</a>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
                 <div class="flex items-center">
-                    <div class="flex items-center space-x-4">
-                        <img src="<?php echo htmlspecialchars($user['image'] ?? 'images/profil.webp'); ?>" alt=""
-                            class="w-10 h-10 rounded-full cursor-pointer"
-                            onclick="window.location.href='profil.php';">
-                        <span class="text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                    <?php if (isset($_SESSION['username'])): ?>
+                        <div class="flex items-center space-x-4">
+                            <img src="<?php echo htmlspecialchars($user['image'] ?? 'images/profil.webp'); ?>"
+                                alt=""
+                                class="w-10 h-10 rounded-full cursor-pointer"
+                                onclick="window.location.href='profil.php';">
+                            <span class="text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                            <button
+                                class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
+                                onclick="window.location.href='logout.php';">
+                                Déconnexion
+                            </button>
+                        </div>
+                    <?php else: ?>
                         <button
-                            class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
-                            onclick="window.location.href='logout.php';">
-                            Déconnexion
+                            class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg mr-4"
+                            onclick="window.location.href='signin.php';">
+                            Connexion
                         </button>
-                    </div>
+                        <button
+                            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
+                            onclick="window.location.href='signup.php';">
+                            Inscription
+                        </button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

@@ -64,7 +64,7 @@ Class Game{
     }
 
     public function add() {
-            $query = "INSERT INTO jeu (admin_id, title, description, type, nb_users, rating, status, temps_jeu, date_sortie,image,image2,image3,image4) 
+            $query = "INSERT INTO jeu (admin_id, title, description, type, nb_users, status, temps_jeu, date_sortie,image,image2,image3,image4) 
                      VALUES (:admin_id, :title, :description, :type, :nb_users, :rating, :status, :temps_jeu, :date_sortie, :image, :image2, :image3, :image4)";
             
             $stmt = $this->db->prepare($query);
@@ -99,7 +99,7 @@ Class Game{
     }
 
     public function getSelectedGame() {
-        $query = "SELECT jeu_id, title, description, image,image2,image3,image4, type, rating, date_sortie, nb_users, temps_jeu, status 
+        $query = "SELECT jeu_id, title, description, image,image2,image3,image4, type, date_sortie, status 
                   FROM jeu 
                   WHERE jeu_id = :jeu_id";
                   
@@ -199,7 +199,7 @@ Class Game{
     }
 
     public function getNotation($jeu_id) {
-        $query = "SELECT u.users_id, n.jeu_id, n.rating, n.content, u.username, u.image, n.create_at
+        $query = "SELECT u.users_id, n.jeu_id, n.content, u.username, u.image, n.create_at
         FROM notation n JOIN users u ON n.users_id = u.users_id WHERE n.jeu_id = :jeu_id";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':jeu_id', $jeu_id);

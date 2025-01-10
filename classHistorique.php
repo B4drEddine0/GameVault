@@ -70,13 +70,5 @@ class Historique
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Méthode pour supprimer un historique
-    public function DeleteHistory($userId){
-        $query = "
-        DELETE FROM historique WHERE users_id=?
-        ";
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute([$userId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    
 }
