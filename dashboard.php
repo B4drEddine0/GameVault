@@ -1,13 +1,13 @@
 <?php
 session_start();
-require_once __DIR__ . '/../config/connexion.php';
-require_once __DIR__ . '/../classes/Game.php';
-require_once __DIR__ . '/../classes/User.php';
+require_once 'connexion.php';
+require_once 'GameClass.php';
+require_once 'UserClass.php';
 
 $user = new User();
 $banned = $user->getBannedUsers();
 
-include __DIR__ . '/components/header.php';
+include 'header.php';
 ?>
 
 <!DOCTYPE html>
@@ -327,7 +327,7 @@ include __DIR__ . '/components/header.php';
         </div>
     </div>
 
-
+    <?php include 'footer.php' ?>
     <script>
     function openAddGameModal() {
         document.getElementById('addGameModal').classList.remove('hidden');
@@ -365,5 +365,3 @@ include __DIR__ . '/components/header.php';
     </script>
 </body>
 </html>
-
-include __DIR__ . '/components/footer.php';

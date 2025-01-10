@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once __DIR__ . '/config/connexion.php';
-require_once __DIR__ . '/classes/Game.php';
-require_once __DIR__ . '/classes/User.php';
+require_once 'connexion.php';
+require_once 'GameClass.php';
+require_once 'UserClass.php';
 
 $dbConnection = new DbConnection();
 $conn = $dbConnection->getConnection();
@@ -60,7 +60,8 @@ $_SESSION['added'] = false;
 </head>
 
 <body class="bg-[#0F172A] text-gray-100">
-    <?php include __DIR__ . '/views/components/header.php';?>
+<?php include 'header.php'?>
+
     <div class="relative min-h-screen flex items-center">
         <div class="absolute inset-0 bg-[#1e1b4b]/50"></div>
         <div class="relative max-w-7xl mx-auto px-6 py-32">
@@ -166,7 +167,8 @@ $_SESSION['added'] = false;
             </div>
         </div>
     </div>
-    <?php include __DIR__ . '/views/components/footer.php';?>
+
+    <?php include 'footer.php'?>
 </body>
 
 </html>

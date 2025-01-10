@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../config/connexion.php';
-require_once __DIR__ . '/../../classes/User.php';
-require_once __DIR__ . '/../../classes/Game.php';
+require_once 'connexion.php';
+require_once 'UserClass.php';
+require_once 'GameClass.php';
 
 $dbConnection = new DbConnection();
 $conn = $dbConnection->getConnection();
@@ -126,9 +126,8 @@ $user = $stmt->fetch();
         }
     </style>
 </head>
-
 <body class="bg-[#0F172A] text-gray-100">
-<?php include __DIR__ . '/../components/header.php';?>
+<?php include 'header.php';?>
 
     <div class="pt-16 bg-[#1e1b4b]/100  min-h-screen">
         <div class="max-w-4xl bg-[#1e1b4b]/50  mx-auto px-4 py-8">
@@ -184,6 +183,8 @@ $user = $stmt->fetch();
             </div>
         </div>
     </div>
+    <?php include 'footer.php'?>
 </body>
+
 
 </html>

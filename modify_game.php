@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../config/connexion.php';
-require_once __DIR__ . '/../../classes/Game.php';
+require_once 'connexion.php';
+require_once 'GameClass.php';
 
 $game = new Game();
 if(isset($_GET['id'])) {
