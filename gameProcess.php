@@ -1,7 +1,8 @@
 <?php
 session_start();
 require_once 'connexion.php';
-require_once 'Game.php';
+require_once 'UserClass.php';
+require_once 'GameClass.php';
 
 if (isset($_POST['ajoute'])) {
         $game = new Game();
