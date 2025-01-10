@@ -2,6 +2,7 @@
 session_start();
 require_once 'GameClass.php';
 require_once 'classUser.php';
+require_once 'ChatClass.php';
 
 if (isset($_POST['ajoute'])) {
         $game = new Game();
@@ -74,11 +75,29 @@ if(isset($_POST['SubReview'])){
     $jeu_id = $_POST['game_id'];
     $rating = $_POST['rating'];
     $content = $_POST['review'];
-
-    $game = new Game();
-    if($game->addNotation($users_id,$jeu_id,$rating,$content)){
+    $user = new User();
+    if($user->checkBann($users_id)){
+        header('Location: game_details.php?id=' . $jeu_id . '&statut=Bann');
+    }else{
+        $game = new Game();
+        if($game->addNotation($users_id,$jeu_id,$rating,$content)){
         header('Location: game_details.php?id=' . $jeu_id);
         exit();
+        }
     }
 }
+
+    if(isset($_POST['addMsg'])){
+        $users_id = $_SESSION['user_id'];
+        $jeu_id = $_POST['jeuId'];
+        $content = $_POST['message'];
+        $user = new User();
+        if($user->checkBann($users_id)){
+            header('Location: game_details.php?id=' . $jeu_id . '&statut=Bann');
+        }else{
+        $chat = new Chat();
+        if($chat->addChat($users_id,$content,$jeu_id)){
+            header('Location: game_details.php?id=' . $jeu_id . '&mode=chat');
+        }}
+    }
 ?> 

@@ -19,6 +19,7 @@ $stmt = $conn->prepare($query);
 $stmt->execute([$username]);
 $user = $stmt->fetch();
 
+$_SESSION['added'] = false;
 ?>
 <!DOCTYPE html>
 <html lang="fr">

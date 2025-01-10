@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once 'GameClass.php';
+require_once 'ChatClass.php';
+require_once 'classUser.php';
 
 if(isset($_GET['id'])) {
     $game = new Game();
@@ -8,10 +10,54 @@ if(isset($_GET['id'])) {
     $game->addView();
     $gameDetails = $game->getSelectedGame();
     $notations = $game->getNotation($_GET['id']);
+    if(isset($_GET['mode'])) {
+        $_SESSION['added'] = true;
+    }else{
+        $_SESSION['added'] = false;
+    }
+
+    if(isset($_GET['statut'])) {
+        echo "
+            <div class='fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm'>
+                <div class='max-w-md w-full mx-4 bg-[#1e1b4b]/95 rounded-lg border border-red-500/50 shadow-2xl shadow-red-500/20'>
+                    <div class='p-6'>
+                        <!-- Header -->
+                        <div class='flex items-center space-x-4 mb-6'>
+                            <div class='w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center'>
+                                <svg xmlns='http://www.w3.org/2000/svg' class='h-6 w-6 text-red-500' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                                    <path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z'/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class='text-xl font-bold text-white'>Accès Restreint</h3>
+                                <p class='text-red-400'>Compte suspendu</p>
+                            </div>
+                        </div>
+
+                        <!-- Message -->
+                        <div class='mb-6 text-zinc-300 leading-relaxed'>
+                            Votre compte a été temporairement suspendu. Vous ne pouvez pas effectuer cette action pour le moment.
+                        </div>
+
+                        <!-- Actions -->
+                        <div class='flex flex-col space-y-3'>
+                            <a href='support.php' class='w-full px-4 py-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-center transition-colors'>
+                                Contacter le Support
+                            </a>
+                            <a href='index.php' class='w-full px-4 py-3 bg-zinc-800/50 hover:bg-zinc-700/50 rounded-lg text-zinc-400 text-center transition-colors'>
+                                Retour à l'Accueil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        ";
+    }
 } else {
     header('Location: index.php');
     exit();
 }
+    $jeu_id = $_GET['id'];
 
 
 
@@ -237,38 +283,49 @@ if(isset($_GET['id'])) {
                         </div>
                     </div>
 
-                    <!-- Chat Popup -->
+        
                     <div class="fixed bottom-6 right-6 z-50">
-                        <!-- Chat Button -->
                         <button onclick="toggleChat()" 
                                 class="bg-indigo-600/90 hover:bg-indigo-500 w-14 h-14 rounded-full flex items-center justify-center glow-effect">
                             <i class="fas fa-comments text-xl"></i>
                         </button>
 
-                        <!-- Chat Window -->
-                        <div id="chatWindow" class="hidden absolute bottom-16 right-0 w-96 bg-[#1e1b4b]/95 backdrop-blur-sm rounded-lg border border-zinc-700/30 shadow-xl">
+                        <div id="chatWindow" class="<?php echo (isset($_SESSION['added']) && $_SESSION['added'] === true) ? '' : 'hidden'; ?> absolute bottom-16 right-0 w-96 bg-[#1e1b4b]/95 backdrop-blur-sm rounded-lg border border-zinc-700/30 shadow-xl">
                             <div class="p-4 border-b border-zinc-700/30">
                                 <h3 class="font-bold">Discussion du jeu</h3>
                             </div>
-                            <div class="h-96 overflow-y-auto p-4 space-y-4">
-                                <!-- Chat Messages -->
+                            <div class="h-96 overflow-y-auto p-4 space-y-4 [&::-webkit-scrollbar]:w-2
+                                    [&::-webkit-scrollbar-track]:rounded-full
+                                    [&::-webkit-scrollbar-track]:bg-zinc-900/30
+                                    [&::-webkit-scrollbar-thumb]:rounded-full
+                                    [&::-webkit-scrollbar-thumb]:bg-zinc-900/30
+                                    dark:[&::-webkit-scrollbar-track]:bg-zinc-900/30
+                                    dark:[&::-webkit-scrollbar-thumb]:bg-zinc-900/30">
+    
+                                <?php $chat = new Chat(); $messages = $chat->getChat($jeu_id);
+                                    foreach($messages as $msg) : 
+                                ?>
                                 <div class="flex items-start space-x-3">
-                                    <img src="avatar.jpg" alt="User" class="w-8 h-8 rounded-full">
+                                    <img src="<?= htmlspecialchars($msg['image'])?>" alt="User" class="w-8 h-8 mt-4 rounded-full">
                                     <div class="bg-[#1e1b4b]/50 rounded-lg p-3">
-                                        <p class="text-sm font-semibold">Username</p>
-                                        <p class="text-sm text-zinc-300">Message content...</p>
+                                        <p class="text-sm font-semibold"><?= htmlspecialchars($msg['username'])?></p>
+                                        <p class="text-sm text-zinc-300"><?= htmlspecialchars($msg['content'])?> <span class="text-zinc-400 text-sm ml-2"><?php echo htmlspecialchars($msg['create_at']);?></span> </p>
                                     </div>
                                 </div>
+                                <?php endforeach;?>
                             </div>
+                            <form method='POST' action='gameProcess.php'>
                             <div class="p-4 border-t border-zinc-700/30">
                                 <div class="flex space-x-2">
-                                    <input type="text" placeholder="Votre message..." 
+                                    <input type="hidden" name='jeuId' value='<?=$jeu_id?>'>
+                                    <input type="text" name ='message' placeholder="Votre message..." 
                                         class="flex-1 bg-[#1e1b4b]/50 border border-zinc-700/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-indigo-500">
-                                    <button class="bg-indigo-600/90 hover:bg-indigo-500 px-4 rounded-lg transition-colors">
-                                        <i class="fas fa-paper-plane"></i>
+                                    <button name='addMsg' class="bg-indigo-600/90 hover:bg-indigo-500 px-4 rounded-lg transition-colors">
+                                        <i class="fas fa-paper-plane"></i> 
                                     </button>
                                 </div>
                             </div>
+                            </form>
                         </div>
                             </div>
                 </div>
@@ -340,7 +397,7 @@ if(isset($_GET['id'])) {
 
         function toggleReviewModal() {
             const modal = document.getElementById('reviewModal');
-            modal.classList.toggle('hidden');
+            modal.classList.remove('hidden');
             modal.classList.toggle('flex');
         }
 

@@ -214,7 +214,6 @@ Class Game{
         $stmt->bindParam('jeu_id',$jeu_id);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        
         return isset($result['total_rate']) ? $result['total_rate'] : 0;
     }
 }
