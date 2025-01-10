@@ -1,12 +1,13 @@
 <?php
+require_once __DIR__ . '/../config/connexion.php';
 
 class Favoris
 {
 
-    private $conn;
-    public function __construct($conn)
+    private $db;
+    public function __construct($db)
     {
-        $this->conn = $conn;
+        $this->db = $db;
     }
 
     public function GetFavoris($userId)
@@ -15,7 +16,7 @@ class Favoris
                   FROM favoris
                   JOIN jeu ON favoris.jeu_id = jeu.jeu_id
                   WHERE favoris.users_id = :userId";
-        $stmt = $this->conn->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->bindParam(':userId', $userId);
         $stmt->execute();
 
@@ -26,7 +27,7 @@ class Favoris
     {
         // Vérifier si le jeu existe déjà dans les favoris
         $queryCheck = "SELECT * FROM favoris WHERE users_id = :users_id AND jeu_id = :jeu_id";
-        $stmtCheck = $this->conn->prepare($queryCheck);
+        $stmtCheck = $this->db->prepare($queryCheck);
         $stmtCheck->bindParam(':users_id', $_SESSION['user_id']);
         $stmtCheck->bindParam(':jeu_id', $gameId);
         $stmtCheck->execute();
@@ -38,7 +39,7 @@ class Favoris
 
         // Ajouter le jeu aux favoris si pas de doublon
         $query = "INSERT INTO favoris (users_id, jeu_id) VALUES (:users_id, :jeu_id)";
-        $stmt = $this->conn->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->bindParam(':users_id', $_SESSION['user_id']);
         $stmt->bindParam(':jeu_id', $gameId);
 
@@ -54,7 +55,7 @@ class Favoris
     public function deleteGameFromFavoris($gameId)
     {
         $query = "DELETE FROM favoris WHERE jeu_id = :jeu_id";
-        $stmt = $this->conn->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->bindParam(':jeu_id', $gameId, PDO::PARAM_INT);
 
         if ($stmt->execute()) {

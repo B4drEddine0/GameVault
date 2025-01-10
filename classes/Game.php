@@ -1,5 +1,5 @@
 <?php
-require_once "connexion.php";
+require_once __DIR__ . '/../config/connexion.php';
 
 Class Game{
     private $db;
@@ -99,7 +99,7 @@ Class Game{
     }
 
     public function getSelectedGame() {
-        $query = "SELECT jeu_id, title, description, image,image2,image3,image4, type, date_sortie, status 
+        $query = "SELECT jeu_id, title, description, image,image2,image3,image4, type, date_sortie 
                   FROM jeu 
                   WHERE jeu_id = :jeu_id";
                   
@@ -214,7 +214,6 @@ Class Game{
         $stmt->bindParam('jeu_id',$jeu_id);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        
         return isset($result['total_rate']) ? $result['total_rate'] : 0;
     }
 }

@@ -1,16 +1,17 @@
 <?php
+require_once __DIR__ . '/../config/connexion.php';
 
 class Historique
 {
+    private $db;
     private $historique_id;
     private $users_id;
     private $jeu_id;
     private $add_at;
-    private $conn;
 
-    public function __construct($conn)
+    public function __construct($db)
     {
-        $this->conn = $conn;
+        $this->db = $db;
     }
 
     // Setters
@@ -65,7 +66,7 @@ class Historique
         WHERE h.users_id = ?
         ORDER BY h.add_at DESC
     ";
-        $stmt = $this->conn->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->execute([$userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

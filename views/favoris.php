@@ -1,8 +1,10 @@
 <?php
 session_start();
-include('connexion.php');
-require_once 'GameClass.php';
-require_once 'classFavoris.php';
+require_once __DIR__ . '/../config/connexion.php';
+require_once __DIR__ . '/../classes/Game.php';
+require_once __DIR__ . '/../classes/Favoris.php';
+
+require_once __DIR__ . '/components/header.php';
 
 $dbConnection = new DbConnection();
 $conn = $dbConnection->getConnection();
@@ -70,55 +72,6 @@ $user = $stmt->fetch();
 </head>
 
 <body class="text-zinc-100">
-    <!-- Navigation -->
-    <nav class="fixed w-full z-10 bg-zinc-900/30 backdrop-blur-sm border-b border-zinc-700/30">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center space-x-8">
-                    <h1 class="text-2xl font-bold">Game<span class="gradient-text">Vault</span></h1>
-                    <div class="ml-10 flex items-center space-x-4">
-                        <a href="index.php" class="text-gray-300 hover:text-white px-3 py-2">Accueil</a>
-                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Jeux</a>
-                        <div class="flex space-x-4">
-                            <a href="#" class="text-gray-300 hover:text-white px-3 py-2">Chat</a>
-                            <?php if (isset($_SESSION['username'])): ?>
-                                <a href="bibliotheque.php" class="text-gray-300 hover:text-white px-3 py-2">Ma Collection</a>
-                                <a href="historique.php" class="text-gray-300 hover:text-white px-3 py-2">Mon Historique</a>
-                                <a href="favoris.php" class="text-gray-300 hover:text-white px-3 py-2">Mes Favoris</a>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex items-center">
-                    <?php if (isset($_SESSION['username'])): ?>
-                        <div class="flex items-center space-x-4">
-                            <img src="<?php echo htmlspecialchars($user['image'] ?? 'images/profil.webp'); ?>"
-                                alt=""
-                                class="w-10 h-10 rounded-full cursor-pointer"
-                                onclick="window.location.href='profil.php';">
-                            <span class="text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></span>
-                            <button
-                                class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
-                                onclick="window.location.href='logout.php';">
-                                Déconnexion
-                            </button>
-                        </div>
-                    <?php else: ?>
-                        <button
-                            class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg mr-4"
-                            onclick="window.location.href='signin.php';">
-                            Connexion
-                        </button>
-                        <button
-                            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
-                            onclick="window.location.href='signup.php';">
-                            Inscription
-                        </button>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </nav>
 
     <div class="pt-20 min-h-screen">
         <div class="max-w-7xl mx-auto px-6 py-8">
@@ -135,8 +88,8 @@ $user = $stmt->fetch();
                                     <img src="<?= htmlspecialchars($game['image']); ?>" class="w-full h-48 object-cover">
                                     <!-- Icône de favori rouge et agrandie, placée dans un espace entre l'image et le bord supérieur -->
                                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                        <a href="game_details.php?id=<?= $gameItem['jeu_id'] ?>"
-                                            class="px-4 py-2 bg-indigo-600 rounded-md text-white transform -translate-y-2 group-hover:translate-y-0 transition-all">
+                                        <a href="/Briefs/Brief-10/GameVault/views/game/game_details.php?id=<?= $game['jeu_id'] ?>"
+                                            class="inline-block px-4 py-2 bg-indigo-600/90 hover:bg-indigo-500 rounded-lg transition-colors">
                                             Voir détails
                                         </a>
                                     </div>
@@ -166,6 +119,7 @@ $user = $stmt->fetch();
             </div>
         </div>
     </div>
+    <?php include 'components/footer.php';?>
 </body>
 
 </html>

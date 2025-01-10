@@ -1,12 +1,13 @@
 <?php
+require_once __DIR__ . '/../config/connexion.php';
 
 class Bibliotheque
 {
-    private $conn;
+    private $db;
 
     public function __construct($conn)
     {
-        $this->conn = $conn;
+        $this->db = $conn;
     }
 
     public function GetBibliotheque($userId)
@@ -15,7 +16,7 @@ class Bibliotheque
                   FROM bibliotheque
                   JOIN jeu ON bibliotheque.jeu_id = jeu.jeu_id
                   WHERE bibliotheque.users_id = :userId";
-        $stmt = $this->conn->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->bindParam(':userId', $userId);
         $stmt->execute();
 
@@ -25,7 +26,7 @@ class Bibliotheque
     public function deleteGameFromLibrary($gameId)
     {
         $query = "DELETE FROM bibliotheque WHERE jeu_id = :jeu_id";
-        $stmt = $this->conn->prepare($query);
+        $stmt = $this->db->prepare($query);
         $stmt->bindParam(':jeu_id', $gameId, PDO::PARAM_INT);  // Bind as integer
     
         if ($stmt->execute()) {
