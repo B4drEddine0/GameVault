@@ -99,7 +99,7 @@ Class Game{
     }
 
     public function getSelectedGame() {
-        $query = "SELECT jeu_id, title, description, image,image2,image3,image4, type, rating, date_sortie, nb_users, temps_jeu, status 
+        $query = "SELECT jeu_id, title, description, image,image2,image3,image4, type, date_sortie 
                   FROM jeu 
                   WHERE jeu_id = :jeu_id";
                   
