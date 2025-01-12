@@ -21,10 +21,10 @@ if (!$userId) {
 $favoris = new Favoris($conn);
 $favorisData = $favoris->GetFavoris($userId);
 
-$query = "SELECT image FROM users WHERE username = ?";
-$stmt = $conn->prepare($query);
-$stmt->execute([$_SESSION['username']]);
-$user = $stmt->fetch();
+if(isset($_POST['delete_game'])){
+    $gameId = $_POST['game_id'];
+    $favoris->deleteGameFromFavoris($gameId);
+}
 
 ?>
 
@@ -85,20 +85,19 @@ $user = $stmt->fetch();
                             <div class="bg-[#1e1b4b]/30 rounded-lg backdrop-blur-sm border border-zinc-700/30 overflow-hidden group flex flex-col">
                                 <div class="relative">
                                     <img src="<?= htmlspecialchars($game['image']); ?>" class="w-full h-48 object-cover">
-                                    <!-- Icône de favori rouge et agrandie, placée dans un espace entre l'image et le bord supérieur -->
                                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                        <a href="game_details.php?id=<?= $gameItem['jeu_id'] ?>"
+                                        <a href="game_details.php?id=<?= $game['jeu_id'] ?>"
                                             class="px-4 py-2 bg-indigo-600 rounded-md text-white transform -translate-y-2 group-hover:translate-y-0 transition-all">
                                             Voir détails
                                         </a>
                                     </div>
                                 </div>
-                                <div class="p-4 flex-grow pb-2"> <!-- Réduction du padding bottom pour minimiser l'espace -->
+                                <div class="p-4 flex-grow pb-2">
                                     <h4 class="font-bold mb-1"><?= htmlspecialchars($game['title']); ?></h4>
-                                    <p class="text-zinc-400 text-sm mb-2"><?= htmlspecialchars($game['type']); ?></p> <!-- Réduction du margin bottom -->
+                                    <p class="text-zinc-400 text-sm mb-2"><?= htmlspecialchars($game['type']); ?></p>
                                 </div>
                                 <div class="flex justify-between items-center px-4">
-                                    <form method="POST" action="" class="inline-block">
+                                    <form method="POST" action="" class="inline-block" onsubmit="return confirm('Voulez-vous vraiment supprimer ce jeu de favoris?')">
                                         <input type="hidden" name="game_id" value="<?= $game['jeu_id']; ?>">
                                         <button type="submit" name="delete_game" class="text-red-400 hover:text-red-600 transition-colors">
                                             <i class="fas fa-heart"></i>

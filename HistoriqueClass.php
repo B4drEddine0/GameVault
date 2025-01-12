@@ -14,7 +14,6 @@ class Historique
         $this->db = $db;
     }
 
-    // Setters
     public function setHistoriqueId($historique_id)
     {
         $this->historique_id = $historique_id;
@@ -35,27 +34,6 @@ class Historique
         $this->add_at = $add_at;
     }
 
-    // Getters
-    public function getHistoriqueId()
-    {
-        return $this->historique_id;
-    }
-
-    public function getUsersId()
-    {
-        return $this->users_id;
-    }
-
-    public function getJeuId()
-    {
-        return $this->jeu_id;
-    }
-
-    public function getAddAt()
-    {
-        return $this->add_at;
-    }
-
 
     public function GetHistorique($userId)
     {
@@ -71,5 +49,23 @@ class Historique
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    
+    public function checkExistingEntry($users_id, $jeu_id) {
+        $checkQuery = "SELECT COUNT(*) FROM historique WHERE users_id = ? AND jeu_id = ?";
+        $checkStmt = $this->db->prepare($checkQuery);
+        $checkStmt->execute([$users_id, $jeu_id]);
+        return $checkStmt->fetchColumn() > 0;
+    }
+
+    public function addToHistory($users_id, $jeu_id) {
+        try {
+            if (!$this->checkExistingEntry($users_id, $jeu_id)) {
+                $query = "INSERT INTO historique (users_id, jeu_id) VALUES (?, ?)";
+                $stmt = $this->db->prepare($query);
+                return $stmt->execute([$users_id, $jeu_id]);
+            }
+            return true;
+        } catch (PDOException $e) {
+            throw $e;
+        }
+    }
 }

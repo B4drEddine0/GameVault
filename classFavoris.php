@@ -25,7 +25,6 @@ class Favoris
 
     public function AddtoFavoris($gameId)
     {
-        // Vérifier si le jeu existe déjà dans les favoris
         $queryCheck = "SELECT * FROM favoris WHERE users_id = :users_id AND jeu_id = :jeu_id";
         $stmtCheck = $this->db->prepare($queryCheck);
         $stmtCheck->bindParam(':users_id', $_SESSION['user_id']);
@@ -37,7 +36,6 @@ class Favoris
             return false;
         }
 
-        // Ajouter le jeu aux favoris si pas de doublon
         $query = "INSERT INTO favoris (users_id, jeu_id) VALUES (:users_id, :jeu_id)";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':users_id', $_SESSION['user_id']);
@@ -65,5 +63,12 @@ class Favoris
         } else {
             echo "Erreur lors de la suppression du jeu.";
         }
+    }
+
+    public function checkFavoris($gameId, $userId) {
+        $query = "SELECT COUNT(*) FROM favoris WHERE jeu_id = ? AND users_id = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$gameId, $userId]);
+        return $stmt->fetchColumn() > 0;
     }
 }

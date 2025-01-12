@@ -11,16 +11,10 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
+
+$user = new User();
 $username = $_SESSION['username'];
-
-$stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
-$stmt->execute([$username]);
-$user = $stmt->fetch();
-
-if (!$user) {
-    echo "Utilisateur non trouvé.";
-    exit;
-}
+$user = $user->getUserByUsername($username);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_username = $_POST['username'];
@@ -28,31 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $new_password = $_POST['password'];
     $new_image = $_POST['image'];
 
-
-    if (!empty($new_password)) {
-        $new_password = password_hash($new_password, PASSWORD_DEFAULT);
-    }
-
-    $update_query = "UPDATE users SET username = ?, email = ? , image = ? WHERE username = ?";
-    if (!empty($new_password)) {
-        $update_query = "UPDATE users SET username = ?, email = ?, user_password = ?, image = ? WHERE username = ?";
-        $stmt = $conn->prepare($update_query);
-        $stmt->execute([$new_username, $new_email, $new_password, $new_image, $username]);
-    } else {
-        $stmt = $conn->prepare($update_query);
-        $stmt->execute([$new_username, $new_email, $new_image, $username]);
-    }
-
-
+    $user = new User();
+    $user->updateUserProfile($username, $new_username, $new_email, $new_password, $new_image);
     $_SESSION['username'] = $new_username;
-
+    $_SESSION['image'] = $new_image;
     header('Location: profil.php');
     exit;
 }
 
-$stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
-$stmt->execute([$username]);
-$user = $stmt->fetch();
 ?>
 
 <!DOCTYPE html>
@@ -158,7 +135,7 @@ $user = $stmt->fetch();
 
             <div class="bg-zinc-900/30 rounded-lg p-6">
                 <h3 class="text-xl font-bold mb-4">Mettre à jour les informations</h3>
-                <form action="/processes/gameProcess.php" method="POST" class="space-y-4">
+                <form action="" method="POST" class="space-y-4">
                     <div>
                         <label class="block text-gray-300 mb-2">Nom d'utilisateur</label>
                         <input type="text" name="username" value="<?php echo htmlspecialchars($user['username']); ?>" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600">

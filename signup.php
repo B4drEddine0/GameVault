@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .gradient-text {
-            background: linear-gradient(to right, #818cf8, #6366f1);
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
