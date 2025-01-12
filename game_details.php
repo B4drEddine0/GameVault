@@ -65,55 +65,6 @@ if(isset($_GET['id'])) {
     $jeu_id = $_GET['id'];
 
     $_SESSION['game_id'] = $jeu_id;
-
-    $checkQuery = "SELECT COUNT(*) FROM historique WHERE users_id = :users_id AND jeu_id = :jeu_id";
-    $checkStmt = $conn->prepare($checkQuery);
-    $checkStmt->bindParam(':users_id', $_SESSION['user_id']);
-    $checkStmt->bindParam(':jeu_id', $_SESSION['game_id']);
-    $checkStmt->execute();
-    
-    $exists = $checkStmt->fetchColumn();
-    
-    
-    
-    
-    try {
-        // Your database insertion code
-        if (isset($_POST['addToCollection'])) {
-            $query = "INSERT INTO bibliotheque (users_id, jeu_id) VALUES (:users_id, :jeu_id)";
-            $stmt = $conn->prepare($query);
-            $stmt->bindParam(':users_id', $_SESSION['user_id']);
-            $stmt->bindParam(':jeu_id', $_SESSION['game_id']);
-            $stmt->execute();
-        }
-    } catch (PDOException $e) {
-        // If there's a duplicate entry error, you can handle it here
-        if ($e->getCode() === '23000') {
-            echo "<script>alert('Erreur: Cet élément existe déjà dans votre collection.');</script>";
-        } else {
-            echo "<script>alert('Erreur: " . $e->getMessage() . "');</script>";
-        }
-    }
-    
-    if (isset($_POST['addToCollection'])) {
-        $query = "INSERT INTO historique (users_id, jeu_id) VALUES (:users_id, :jeu_id)";
-        $stmt = $conn->prepare($query);
-        $stmt->bindParam(':users_id', $_SESSION['user_id']);
-        $stmt->bindParam(':jeu_id', $_SESSION['game_id']);
-        $stmt->execute();
-    }
-    
-    if (isset($_POST['confirmAddToCollection'])) {
-        $playtime = $_POST['playtime'];
-        $status = $_POST['status'];
-    
-        // Insert into bibliotheque with playtime and status
-        $query = $conn->prepare("INSERT INTO bibliotheque (users_id, jeu_id, temps_jeu, status) VALUES (?, ?, ?, ?)");
-        $query->execute([$_SESSION['user_id'], $_SESSION['game_id'], $playtime, $status]);
-    
-        echo "Ajouté à votre collection avec succès.";
-    }
-
 ?>
 
 <!DOCTYPE html>
@@ -142,6 +93,37 @@ if(isset($_GET['id'])) {
 </head>
 <body class="text-zinc-100">
     <?php include 'header.php'?>
+
+    <?php if (isset($_GET['error']) && $_GET['error'] === 'already_in_collection'): ?>
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <div class="max-w-md w-full mx-4 bg-[#1e1b4b]/95 rounded-lg border border-red-500/50 shadow-2xl shadow-red-500/20">
+            <div class="p-6">
+                <div class="flex items-center space-x-4 mb-6">
+                    <div class="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Attention</h3>
+                        <p class="text-red-400">Jeu déjà présent</p>
+                    </div>
+                </div>
+                <div class="mb-6 text-zinc-300 leading-relaxed">
+                    Ce jeu est déjà présent dans votre bibliothèque.
+                </div>
+                <div class="flex flex-col space-y-3">
+                    <a href="bibliotheque.php" class="w-full px-4 py-3 bg-red-500/10 hover:bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-center transition-colors">
+                        Voir ma bibliothèque
+                    </a>
+                    <a href="game_details.php?id=<?= $_GET['id'] ?>" class="w-full px-4 py-3 bg-zinc-800/50 hover:bg-zinc-700/50 rounded-lg text-zinc-400 text-center transition-colors">
+                        Fermer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
     <div class="pt-20 min-h-screen">
         <div class="max-w-7xl mx-auto px-6 py-12">
@@ -231,7 +213,7 @@ if(isset($_GET['id'])) {
                     </div>
 
                     <div class="flex space-x-4">
-                        <form action="" method="POST">
+                        <form action="collectionProcess.php" method="POST">
                             <button type="button" id="addToCollectionBtn" class="px-6 py-3 bg-indigo-600/90 hover:bg-indigo-500 rounded-lg transition-colors glow-effect">
                                 <i class="fas fa-bookmark mr-2"></i>
                                 Ajouter à ma collection
@@ -283,27 +265,26 @@ if(isset($_GET['id'])) {
 
                                 <div class="grid gap-6">
                                 <?php foreach ($notations as $notation): ?>
-
                                     <div class="bg-[#1e1b4b]/30 backdrop-blur-sm rounded-lg border border-zinc-700/30 p-6">
                                         <div class="flex justify-between items-start mb-4">
                                             <div class="flex items-center">
-                                                <img src="<?= htmlspecialchars($notation['image']);?>" alt="User Avatar" class="w-10 h-10 rounded-full mr-4">
+                                                <img src="<?= $notation['image'] ?? 'default-avatar.jpg' ?>" alt="User Avatar" class="w-10 h-10 rounded-full mr-4">
                                                 <div>
-                                                    <h4 class="font-bold"><?php echo $notation['username']?></h4>
+                                                    <h4 class="font-bold"><?= $notation['username'] ?? 'Utilisateur' ?></h4>
                                                     <div class="flex items-center">
                                                         <div class="flex text-amber-400">
-                                                        <?php for ($i = 0; $i < 5; $i++): ?>
-                                                            <i class="fas fa-star <?= $i < $game->avgRate($_GET['id']) ? 'text-amber-400' : 'text-zinc-600' ?>"></i>
-                                                        <?php endfor; ?>
+                                                            <?php for($i = 1; $i <= 5; $i++): ?>
+                                                                <i class="fas fa-star <?= $i <= ($notation['rating'] ?? 0) ? 'text-amber-400' : 'text-zinc-600' ?>"></i>
+                                                            <?php endfor; ?>
                                                         </div>
-                                                        <span class="text-zinc-400 text-sm ml-2"><?php echo htmlspecialchars($notation['create_at']);?></span>
+                                                        <span class="text-zinc-400 text-sm ml-2"><?= $notation['create_at'] ?? '' ?></span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <p class="text-zinc-300"><?php echo htmlspecialchars($notation['content']);?></p>
+                                        <p class="text-zinc-300"><?= $notation['content'] ?? '' ?></p>
                                     </div>
-                                    <?php endforeach;?>
+                                <?php endforeach; ?>
                                 </div>
                             </div>
                         </div>
@@ -406,53 +387,7 @@ if(isset($_GET['id'])) {
             </div>
 
 
-    <footer class="bg-[#1e1b4b]/40 backdrop-blur-sm border-t border-zinc-700/30">
-        <div class="max-w-7xl mx-auto px-6 py-12">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div class="col-span-1">
-                    <h2 class="text-2xl font-bold mb-4">Game<span class="gradient-text">Vault</span></h2>
-                    <p class="text-zinc-400">Votre univers gaming, simplifié.</p>
-                </div>
-
-                <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-4">Navigation</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Découvrir</a></li>
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Bibliothèque</a></li>
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Communauté</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-4">Communauté</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Discord</a></li>
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Forum</a></li>
-                        <li><a href="#" class="text-zinc-400 hover:text-white transition-colors">Blog</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-4">Suivez-nous</h3>
-                    <div class="flex space-x-4">
-                        <a href="#" class="bg-indigo-600/20 p-2 rounded-lg hover:bg-indigo-600/30 transition-colors">
-                            <i class="fab fa-discord text-zinc-400 hover:text-white"></i>
-                        </a>
-                        <a href="#" class="bg-indigo-600/20 p-2 rounded-lg hover:bg-indigo-600/30 transition-colors">
-                            <i class="fab fa-twitter text-zinc-400 hover:text-white"></i>
-                        </a>
-                        <a href="#" class="bg-indigo-600/20 p-2 rounded-lg hover:bg-indigo-600/30 transition-colors">
-                            <i class="fab fa-twitch text-zinc-400 hover:text-white"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="border-t border-zinc-700/30 mt-8 pt-8 text-center text-zinc-400">
-                <p>&copy; 2025 GameVault by MassaAlKhayr. Tous droits réservés.</p>
-            </div>
-        </div>
-    </footer>
+            <?php include 'footer.php'?>
     <script>
         function toggleChat() {
             const chatWindow = document.getElementById('chatWindow');
@@ -501,17 +436,14 @@ if(isset($_GET['id'])) {
         const addToCollectionModal = document.getElementById('addToCollectionModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
 
-        // Ouvrir le modal
         addToCollectionBtn.addEventListener('click', () => {
             addToCollectionModal.classList.remove('hidden');
         });
-
-        // Fermer le modal
+        
         closeModalBtn.addEventListener('click', () => {
             addToCollectionModal.classList.add('hidden');
         });
 
-        // Fermer le modal en cliquant à l'extérieur
         addToCollectionModal.addEventListener('click', (e) => {
             if (e.target === addToCollectionModal) {
                 addToCollectionModal.classList.add('hidden');

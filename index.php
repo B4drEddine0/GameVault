@@ -6,19 +6,7 @@ require_once 'UserClass.php';
 
 $dbConnection = new DbConnection();
 $conn = $dbConnection->getConnection();
-if (!isset($_SESSION['username'])) {
-    header('Location: signin.php');
-    exit;
-}
 
-$username = $_SESSION['username'];
-
-
-$userId = $_SESSION['user_id'];
-$query = "SELECT image FROM users WHERE username = ?";
-$stmt = $conn->prepare($query);
-$stmt->execute([$username]);
-$user = $stmt->fetch();
 
 $_SESSION['added'] = false;
 ?>
@@ -123,9 +111,11 @@ $_SESSION['added'] = false;
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-sm text-gray-400"><?= htmlspecialchars($gameItem['type']) ?></span>
-                                <button class="text-[#4ECDC4] hover:text-white transition-colors">
-                                    <i class="fas fa-bookmark"></i>
-                                </button>
+                                <div class="text-[#4ECDC4] hover:text-white transition-colors">
+                                    <i class="fas fa-eye mr-1"></i>
+                                    <?php $game->setJeu_id($gameItem['jeu_id']);?>
+                                    <?= $game->getViewCount()?>
+                                </div>
                             </div>
                         </div>
                     </div>

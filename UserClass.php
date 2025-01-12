@@ -10,7 +10,6 @@ class User {
     private $image;
     private $db;
 
-    // Constructeur pour initialiser les propriétés de l'utilisateur
     public function __construct($id = null, $username = null, $email = null, $password = null, $role = 'joueur', $image=null) {
         $this->id = $id;
         $this->username = $username;
@@ -23,11 +22,6 @@ class User {
         $this->db = $database->getConnection();
     }
 
-    // Getters et Setters
-    public function getId() {
-        return $this->id;
-    }
-
     public function setId($id) {
         $this->id = $id;
     }
@@ -36,44 +30,28 @@ class User {
         $this->image = $image;
     }
 
-    public function getUsername() {
-        return $this->username;
-    }
-
     public function setUsername($username) {
         $this->username = $username;
-    }
-
-    public function getEmail() {
-        return $this->email;
     }
 
     public function setEmail($email) {
         $this->email = $email;
     }
 
-    public function getPassword() {
-        return $this->password;
-    }
-
     public function setPassword($password) {
         $this->password = $password;
     }
 
-    public function getRole() {
-        return $this->role;
-    }
 
     public function setRole($role) {
         $this->role = $role;
     }
 
-    // Méthode pour hacher le mot de passe
+
     public function hashPassword() {
         $this->password = password_hash($this->password, PASSWORD_BCRYPT);
     }
 
-    // Méthode pour vérifier le mot de passe
     public function verifyPassword($inputPassword) {
         return password_verify($inputPassword, $this->password);
     }
@@ -126,7 +104,7 @@ class User {
         $stmt->bindParam(':users_id', $this->id);
 
         if($stmt->execute()) {
-            header('Location: /views/dashboard.php');
+            header('Location: dashboard.php');
         }
         return false;
     }
@@ -162,7 +140,7 @@ class User {
         $stmt2 = $this->db->prepare($query2);
         $stmt2->bindParam(':users_id',$id);
         $stmt2->execute();
-        header('Location: /views/dashboard.php');
+        header('Location: dashboard.php');
         exit();
     }
 
@@ -176,8 +154,28 @@ class User {
         $stmt2 = $this->db->prepare($query2);
         $stmt2->bindParam(':users_id',$id);
         $stmt2->execute();
-        header('Location: /views/dashboard.php');
+        header('Location: dashboard.php');
         exit();
+    }
+
+    public function updateUserProfile($username, $new_username, $new_email, $new_password, $new_image) {
+        if (!empty($new_password)) {
+            $new_password = password_hash($new_password, PASSWORD_DEFAULT);
+            $query = "UPDATE users SET username = ?, email = ?, user_password = ?, image = ? WHERE username = ?";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([$new_username, $new_email, $new_password, $new_image, $username]);
+        } else {
+            $query = "UPDATE users SET username = ?, email = ?, image = ? WHERE username = ?";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([$new_username, $new_email, $new_image, $username]);
+        }
+    }
+
+    public function getUserByUsername($username) {
+        $query = "SELECT * FROM users WHERE username = ?";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$username]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
 }

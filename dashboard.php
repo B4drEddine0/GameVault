@@ -4,6 +4,12 @@ require_once 'connexion.php';
 require_once 'GameClass.php';
 require_once 'UserClass.php';
 
+if (!isset($_SESSION['username']) || $_SESSION['role'] !== 'admin') {
+    header('Location: signin.php');
+    exit;
+}
+
+
 $user = new User();
 $banned = $user->getBannedUsers();
 

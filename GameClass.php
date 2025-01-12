@@ -24,20 +24,6 @@ Class Game{
         $this->db = $database->getConnection();
     }
 
-    public function getId() { return $this->jeu_id; }
-    public function getAdminId() { return $this->admin_id; }
-    public function getTitle() { return $this->title; }
-    public function getImage() { return $this->image; }
-    public function getDescription() { return $this->description; }
-    public function getType() { return $this->type; }
-    public function getNbUsers() { return $this->nb_users; }
-    public function getRating() { return $this->rating; }
-    public function getStatus() { return $this->status; }
-    public function getTempsJeu() { return $this->temps_jeu; }
-    public function getDateSortie() { return $this->date_sortie; }
-    public function getCreateAt() { return $this->create_at; }
-
-
     public function setJeu_id($jeu_id) { $this->jeu_id = $jeu_id; }
     public function setAdminId($admin_id) { $this->admin_id = $admin_id; }
     public function setTitle($title) { $this->title = $title; }
@@ -199,7 +185,7 @@ Class Game{
     }
 
     public function getNotation($jeu_id) {
-        $query = "SELECT u.users_id, n.jeu_id, n.content, u.username, u.image, n.create_at
+        $query = "SELECT u.users_id, n.jeu_id, n.content, u.username, u.image, n.create_at,n.rating
         FROM notation n JOIN users u ON n.users_id = u.users_id WHERE n.jeu_id = :jeu_id";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':jeu_id', $jeu_id);

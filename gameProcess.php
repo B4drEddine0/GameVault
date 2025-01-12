@@ -3,6 +3,7 @@ session_start();
 require_once 'connexion.php';
 require_once 'UserClass.php';
 require_once 'GameClass.php';
+require_once 'ChatClass.php';
 
 if (isset($_POST['ajoute'])) {
         $game = new Game();
@@ -23,7 +24,7 @@ if (isset($_POST['ajoute'])) {
         $game->setTempsJeu(0);
 
         if($game->add()) {
-            header('Location: /views/dashboard.php');
+            header('Location: dashboard.php');
         }
 }
 
@@ -31,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $id = $_GET['deletedId'];
     $game = new Game();
     if($game->deleteGame($id)) {
-        header('Location: /views/dashboard.php');
+        header('Location: dashboard.php');
     }
 }
 
@@ -71,6 +72,10 @@ if(isset($_GET['banne'])){
 }
 
 if(isset($_POST['SubReview'])){
+    if (!isset($_SESSION['username'])) {
+        header('Location: signin.php');
+        exit;
+    }
     $users_id = $_SESSION['user_id'];
     $jeu_id = $_POST['game_id'];
     $rating = $_POST['rating'];
@@ -88,6 +93,10 @@ if(isset($_POST['SubReview'])){
 }
 
     if(isset($_POST['addMsg'])){
+        if (!isset($_SESSION['username'])) {
+            header('Location: signin.php');
+            exit;
+        }
         $users_id = $_SESSION['user_id'];
         $jeu_id = $_POST['jeuId'];
         $content = $_POST['message'];
