@@ -7,6 +7,7 @@ username varchar(100),
 email varchar(250),
 user_password varchar(250),
 role_user enum('admin','joueur') DEFAULT 'joueur' 
+image VARCHAR(255)
 )
 
 create table Admins(
@@ -34,7 +35,11 @@ CREATE TABLE jeu (
     status VARCHAR(50),
 	temps_jeu int,
     date_sortie DATE,
-    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    image VARCHAR(255),
+    image2 VARCHAR(255),
+    image3 VARCHAR(255),
+    image4 VARCHAR(255),
     FOREIGN KEY (admin_id) REFERENCES Admins(admin_id)
 )
 
@@ -62,6 +67,7 @@ CREATE TABLE bibliotheque (
     bib_id INT PRIMARY KEY AUTO_INCREMENT,
     users_id INT NOT NULL,
     jeu_id INT NOT NULL,
+    temps_jeu INT,
     FOREIGN KEY (users_id) REFERENCES users(users_id),
     FOREIGN KEY (jeu_id) REFERENCES jeu(jeu_id)
 )
@@ -71,6 +77,7 @@ CREATE TABLE chat (
     users_id INT NOT NULL,
     content TEXT NOT NULL,
     create_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    jey_id INT,
     FOREIGN KEY (users_id) REFERENCES users(users_id)
 )
 
@@ -83,41 +90,3 @@ CREATE TABLE historique (
     FOREIGN KEY (users_id) REFERENCES users(users_id),
     FOREIGN KEY (jeu_id) REFERENCES jeu(jeu_id)
 )
-
-alter table jeu add COLUMN image VARCHAR(250);
-alter table users add COLUMN image VARCHAR(250); 
-
-
-ALTER TABLE users
-MODIFY COLUMN image VARCHAR(255) DEFAULT 'images/profil.webp';
-
-ALTER TABLE users
-MODIFY COLUMN image VARCHAR(255) DEFAULT 'images/profil.webp';
-
-
-INSERT INTO users (username, email, user_password, role_user, image) 
-VALUES ('utilisateur', 'nouvel_utilisateur@example.com', 'motdepasse', 'joueur', 'https://th.bing.com/th/id/OIP.tLotgCDtzgTdwJcTiXWRCwHaEK?rs=1&pid=ImgDetMain');
-
-ALTER TABLE users
-Add COLUMN statut VARCHAR(50) DEFAULT 'Active';
-
-ALTER TABLE jeu
-ADD COLUMN image4 VARCHAR(255) ;
-
-ALTER TABLE bibliotheque
-ADD CONSTRAINT unique_user_game UNIQUE (users_id, jeu_id);
-
-ALTER TABLE jeu
-ADD COLUMN vues INT ;
-
-ALTER TABLE jeu
-MODIFY COLUMN vues INT DEFAULT 1;
-
-ALTER TABLE jeu
-DROP COLUMN temps_jeu;
-
-ALTER TABLE bibliotheque
-ADD COLUMN temps_jeu TIME DEFAULT 0 ;
-
-ALTER TABLE bibliotheque
-ADD COLUMN status ENUM ('En cours', 'Terminé', 'Abondone') DEFAULT 'En cours';
